@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="CS353: Database Systems Course Project : Bus Company Data Management System" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>CS353: Database Systems Course Project</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ozen/cs353-project">View on GitHub</a>
+
+          <h1 id="project_title">CS353: Database Systems Course Project</h1>
+          <h2 id="project_tagline">Bus Company Data Management System</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/ozen/cs353-project/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/ozen/cs353-project/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>
+<a name="description" class="anchor" href="#description"><span class="octicon octicon-link"></span></a>Description</h2>
+
+<p>In this project, we design and implement a software to be used by a bus company. A bus company has to keep track of their buses, arrange their routes and schedule voyages. Then, the company sell tickets to customers based on this data. Therefore, a data-driven software is highly efficient tool for a bus company. The software can also be used to store personnel data, or obtain some statistics about routes. The management of the data can be solved by a relational model. Thus, a bus company data management system is a good case for using a RDBMS.</p>
+
+<h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<p>There are 4 operational roles for this application. These roles are customer, salesperson, terminal agent, and manager. Each role will have different rights on the system and will use different interfaces specific to their role.</p>
+
+<h3>
+<a name="functional-requirements-for-customer-operations" class="anchor" href="#functional-requirements-for-customer-operations"><span class="octicon octicon-link"></span></a>Functional Requirements for Customer Operations</h3>
+
+<ul>
+<li>Customers can view scheduled voyages.</li>
+<li>Customers can view seat status of each voyage.</li>
+<li>Customers can make reservations for empty seats of voyages online.</li>
+<li>Customers can buy tickets for empty seats of voyages online.</li>
+<li>Customers can cancel their reservations for voyages online.</li>
+<li>Customers can rent buses for specific time intervals.</li>
+<li>Customers can rent buses with or without bus crew.</li>
+</ul><h3>
+<a name="functional-requirements-for-salesperson-operations" class="anchor" href="#functional-requirements-for-salesperson-operations"><span class="octicon octicon-link"></span></a>Functional Requirements for Salesperson Operations</h3>
+
+<ul>
+<li>Salespeople can view list of tickets and reservations.</li>
+<li>Salespeople can view scheduled voyages.</li>
+<li>Salespeople can view details (seat information, reserved, arrival and departure times) of any voyage.</li>
+<li>Salespeople can sale tickets to customers.</li>
+<li>Salespeople can apply discounts on standard ticket prices.</li>
+<li>Salespeople can make reservations for customers.</li>
+<li>Salespeople can cancel reservations.</li>
+<li>Salespeople can refund tickets.</li>
+</ul><h3>
+<a name="functional-requirements-for-terminal-agent-operations" class="anchor" href="#functional-requirements-for-terminal-agent-operations"><span class="octicon octicon-link"></span></a>Functional Requirements for Terminal Agent Operations</h3>
+
+<ul>
+<li>Terminal agents can view scheduled voyages along with their seat status.</li>
+<li>Terminal agents can enter arrival times of the buses.</li>
+<li>Terminal agents can cancel voyages with zero passengers.</li>
+</ul><h3>
+<a name="functional-requirements-for-manager-operations" class="anchor" href="#functional-requirements-for-manager-operations"><span class="octicon octicon-link"></span></a>Functional Requirements for Manager Operations</h3>
+
+<ul>
+<li>Managers can arrange(add/remove/change) voyages.</li>
+<li>Managers can register/unregister buses to the system.</li>
+<li>Managers can create/remove bus types.</li>
+<li>Managers can create routes.</li>
+<li>Managers can set standard prices for specific route-bus pairs.</li>
+<li>Managers can lease buses.</li>
+<li>Managers can adjust salaries of salespeople, terminal agents,  drivers and assistants.</li>
+<li>Managers can hire/fire salespeople, terminal agents, drivers and assistants.</li>
+<li>Managers can update staff info.</li>
+<li>Managers can register/unregister terminals, branches and service areas.</li>
+<li>Managers can query average <a href="http://en.wikipedia.org/wiki/Passenger_load_factor">passenger load factors</a> of routes.</li>
+</ul><h3>
+<a name="other-functional-requirements" class="anchor" href="#other-functional-requirements"><span class="octicon octicon-link"></span></a>Other Functional Requirements</h3>
+
+<ul>
+<li>Bus types can have unlimited kinds of features (TV, Internet etc.).</li>
+<li>Buses that have the same brand, model and year can have different features.</li>
+<li>When a bus goes out of service, its status can be changed without deleting it from the system.</li>
+</ul><h2>
+<a name="er-model" class="anchor" href="#er-model"><span class="octicon octicon-link"></span></a>E/R Model</h2>
+
+<p><img src="https://github.com/ozen/cs353-project/raw/master/erdiagram.jpeg" alt="E/R Model" title="E/R Model"></p>
+
+<h2>
+<a name="limitations" class="anchor" href="#limitations"><span class="octicon octicon-link"></span></a>Limitations</h2>
+
+<ul>
+<li>Voyages can be added only after the corresponding route is added to the system.</li>
+<li>Routes and terminals cannot be deleted.</li>
+<li>Buses can be added only after the corresponding bus type is added to the system.</li>
+<li>Bus types and buses cannot be deleted.</li>
+<li>Routes can only be between terminals.</li>
+<li>Refund is done only at branches by salesperson.</li>
+<li>Buses do not travel between terminals except of voyages.</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">CS353: Database Systems Course Project maintained by <a href="https://github.com/ozen">ozen</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
