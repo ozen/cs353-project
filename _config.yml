@@ -1,3 +1,4 @@
 name: Bus Company Data Management System
 markdown: redcarpet
 pygments: true
+baseurl: /cs353-project
