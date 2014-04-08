@@ -62,7 +62,7 @@ There are 4 operational roles for this application. These roles are customer, sa
 
 ## E/R Model (click to see larger)
 
-[![E/R Model]({{ site.url }}/images/erdiagram_small.jpeg)]({{ site.url }}/images/erdiagram.jpeg)
+[![E/R Model]({{ site.baseurl }}/images/erdiagram_small.jpeg)]({{ site.baseurl }}/images/erdiagram.jpeg)
 
 ## Limitations
 
