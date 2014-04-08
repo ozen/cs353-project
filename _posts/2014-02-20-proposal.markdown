@@ -1,0 +1,75 @@
+---
+layout: post
+title:  "Project Proposal"
+date:   2014-02-20 10:00:00
+categories: jekyll update
+---
+
+## Description
+
+In this project, we design and implement a software to be used by a bus company. A bus company has to keep track of their buses, arrange their routes and schedule voyages. Then, the company sell tickets to customers based on this data. Therefore, a data-driven software is highly efficient tool for a bus company. The software can also be used to store personnel data, or obtain some statistics about routes. The management of the data can be solved by a relational model. Thus, a bus company data management system is a good case for using a RDBMS.
+
+## Requirements
+
+There are 4 operational roles for this application. These roles are customer, salesperson, terminal agent, and manager. Each role will have different rights on the system and will use different interfaces specific to their role.
+
+### Functional Requirements for Customer Operations
+
+* Customers can view scheduled voyages.
+* Customers can view seat status of each voyage.
+* Customers can make reservations for empty seats of voyages online.
+* Customers can buy tickets for empty seats of voyages online.
+* Customers can cancel their reservations for voyages online.
+* Customers can rent buses for specific time intervals.
+* Customers can rent buses with or without bus crew.
+
+### Functional Requirements for Salesperson Operations
+
+* Salespeople can view list of tickets and reservations.
+* Salespeople can view scheduled voyages.
+* Salespeople can view details (seat information, reserved, arrival and departure times) of any voyage.
+* Salespeople can sale tickets to customers.
+* Salespeople can apply discounts on standard ticket prices.
+* Salespeople can make reservations for customers.
+* Salespeople can cancel reservations.
+* Salespeople can refund tickets.
+
+### Functional Requirements for Terminal Agent Operations
+
+* Terminal agents can view scheduled voyages along with their seat status.
+* Terminal agents can enter arrival times of the buses.
+* Terminal agents can cancel voyages with zero passengers.
+
+### Functional Requirements for Manager Operations
+
+* Managers can arrange(add/remove/change) voyages.
+* Managers can register/unregister buses to the system.
+* Managers can create/remove bus types.
+* Managers can create routes.
+* Managers can set standard prices for specific route-bus pairs.
+* Managers can lease buses.
+* Managers can adjust salaries of salespeople, terminal agents,  drivers and assistants.
+* Managers can hire/fire salespeople, terminal agents, drivers and assistants.
+* Managers can update staff info.
+* Managers can register/unregister terminals, branches and service areas.
+* Managers can query average [passenger load factors](http://en.wikipedia.org/wiki/Passenger_load_factor) of routes.
+
+### Other Functional Requirements
+
+* Bus types can have unlimited kinds of features (TV, Internet etc.).
+* Buses that have the same brand, model and year can have different features.
+* When a bus goes out of service, its status can be changed without deleting it from the system.
+
+## E/R Model (click to see larger)
+
+[![E/R Model]({{ site.url }}/images/erdiagram_small.jpeg)]({{ site.url }}/images/erdiagram.jpeg)
+
+## Limitations
+
+* Voyages can be added only after the corresponding route is added to the system.
+* Routes and terminals cannot be deleted.
+* Buses can be added only after the corresponding bus type is added to the system.
+* Bus types and buses cannot be deleted.
+* Routes can only be between terminals.
+* Refund is done only at branches by salesperson.
+* Buses do not travel between terminals except of voyages.
