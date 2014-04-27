@@ -1,0 +1,989 @@
+---
+layout: post
+title:  "Design Report"
+date:   2014-04-18 10:00:00
+categories: jekyll update
+---
+
+# Revised E/R Model
+
+[![E/R Model]({{ site.baseurl }}/images/erdiagram_rev2_small.png)]({{ site.baseurl }}/images/erdiagram_rev2.png)
+
+
+# Relation Schemas
+
+## Summary
+
+staff(tck_no, name, salary, phone, home_address, start_date)
+
+systemuser(tck_no, password)
+	FK: tck_no references staff
+
+manager(tck_no, position)
+	FK: tck_no references systemuser
+
+salesperson(tck_no, office_city, office_address)
+	FK: tck_no references systemuser
+	FK: (office_city, office_address) references sales_office(city, address)
+
+terminal_agent(tck_no, terminal_city, terminal_address)
+	FK: tck_no references systemuser
+	FK: (terminal_city, terminal_address) references terminal(city,address)
+
+sales_office(city, address, telephone)
+
+driver(tck_no, license_no)
+	FK: tck_no references staff
+
+rent(plate, start_time, end_time, price, rented_from)
+	FK: plate references bus
+
+rented_driver(tck_no, plate, start_time)
+	FK: tck_no references driver
+	FK: (plate, start_time) references rent
+
+assistant(tck_no, rank)
+	FK: tck_no references staff
+
+rented_assistant(plate, start_time, tck_no) 
+	FK: tck_no references assistant
+	FK: (plate, start_time) references rent
+
+customer(tck_no, name, surname, dateofbirth, gender)
+
+rented_by(tck_no, plate, start_time)
+	FK: tck_no references customer
+	FK: (plate,start_time) references rent
+
+garage(city, address, telephone, capacity)
+
+is_at(city, address, plate)
+	FK: (city, address) references garage
+	FK: plate references bus
+
+bustype(brand, model, year, layout, storage_capacity, passanger_capacity, height, width, length)
+
+bustype_feature(brand, model, year, feature_name)
+	FK: (brand, model, year) references bustype
+
+terminal(city, address, telephone, capacity)
+
+bus(plate, brand, model, year, roaming_distance, start_date, is_operational)
+	FK: (brand, model, year) references bustype
+
+route(id, depart_city, depart_address, arrive_city, arrive_address, estimated_duration, distance, number_of_breaks)
+	FK: (depart_city, depart_address) references terminal(city, address) 
+	FK: (arrive_city, arrive_address) references terminal(city, address)
+
+stopover(city, address, route_id)
+	FK: route_id references route(id)
+	FK: (city, address) references terminal
+
+servicearea(address, start_year)
+
+break(route_id, address, duration)
+	FK: route_id references route(id)
+	FK: address references servicearea
+
+voyage(plate, route_id, departure_time, arrival_time, price, occupied_seats)
+	FK: plate references bus
+	FK: route_id references route(id)
+
+reservation(tck_no, plate, route_id, departure_time, seat, time, price)
+	FK: tck_no references customer
+	FK: (plate,route_id, departure_time) references voyage
+
+associated_driver(tck_no, plate, route_id, departure_time)
+	FK: tck_no references driver
+	FK: (plate,route_id, departure_time) references voyage
+
+associated_assistant(tck_no, plate, route_id, departure_time)
+	FK: tck_no references assistant
+	FK: (plate,route_id, departure_time) references voyage
+
+ticket(tck_no, plate, route_id, departure_time, seat, payment_type, payment_time, price)
+	FK: tck_no references customer
+	FK: (plate,route_id, departure_time) references voyage
+
+
+## Detailed Schemas
+
+staff
+Relational Model: staff(tck_no, name, salary, phone, home_address, start_date)
+Functonal Dependencies: tck_no -> name, salary, phone, home_address, start_date
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition: 
+create table staff (
+	tck_no 	char(8)		primary key,
+	name		varchar(50)	not null,
+	salary		numeric()	not null,
+	phone		varchar(15)	not null,
+	home_address	varchar(100)	not null,
+	start_date	varchar(10)	not null
+);
+
+system_user
+Relational Model: system_user(tck_no, password)
+Functional Dependencies: tck_no -> password
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition: 
+	create table system_user (
+		tck_no		char(8)		primary key,
+		password	varchar(20)	not null,
+		foreign key (tck_no) references staff
+	);
+
+manager
+Relational Model: manager(tck_no, position)
+Functional Dependencies: tck_no -> position
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition:
+	create table manager (
+		tck_no		char(11)		primary key,
+		position	varchar(40),
+		foreign key (tck_no) references staff
+	);
+
+sales_person
+Relational Model: sales_person(tck_no, office_city, office_address)
+Functional Dependencies: tck_no -> office_city, office_address
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition: 
+	create table salesperson (
+		tck_no		char(11)		primary key,
+		office_city	varchar(20)		not null,
+		office_address	varchar(100)		not null,
+		foreign key (tck_no) references staff,
+		foreign key (office_city, office_address) references sales_office
+	);
+
+terminal_agent
+Relational Model: terminal_agent(tck_no, terminal_city, terminal_address)
+Functional Dependencies: tck_no -> terminal_city, terminal_address
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition:
+	create table terminal_agent (
+		tck_no			char(11)	primary key,
+		terminal_city		varchar(20)	not null,
+		terminal_address 	varchar(100)	not null,
+		foreign key (tck_no) references staff,
+		foreign key (office_city, office_address) references sales_office
+	);
+
+sales_office
+Relational Model: sales_office(city, address, phone)
+Functional Dependencies: city, address -> phone
+Candidate Keys: {(city, address)}
+Normal Form: BCNF
+Table Definition:
+	create table sales_office (
+		city		varchar(20)		primary key,
+		address	varchar(100)		not null,
+		phone		varchar(15)		not null
+	);
+
+driver
+Relational Model: driver(tck_no, license_no)
+Functional Dependencies: tck_no -> license_no
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition:
+	create table driver (
+		tck_no		char(11)		primary_key,
+		license_no	char(7)			not null
+		foreign key (tck_no) references staff,
+	);
+
+rent
+Relational Model: rent(plate, start_time, end_time, price, rented_from)
+Functional Dependencies: plate, start_time -> end_time, price, rented_from
+Candidate Keys: {(plate, start_time)}
+Normal Form: BCNF
+Table Definition:
+	create table rent (
+		plate		varchar(10)	primary key,
+		start_time	varchar(10)	not null,
+		end_time	varchar(10),
+		price		numeric(4,2)	not null,
+		rented_from	varchar(20)	not null,
+		foreign key (plate) references bus
+	);
+
+rented_driver
+Relational Model: rented_driver(tck_no, plate, start_time)
+Functional Dependencies: 
+Candidate Keys: {(tck_no, plate, start_time)}
+Normal Form: BCNF
+Table Definition:
+	create table rented_driver (
+		tck_no		char(11)		primary key,
+		plate		varchar(10)		primary key,
+		start_time	varchar(10)		primary key,
+		foreign key (tck_no) references driver,
+		foreign key (plate, start_time) references rent
+	);
+
+assistant
+Relational Model: assistant(tck_no, rank)
+Functional Dependencies: tck_no -> rank
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition:
+	create table assistant (
+		tck_no		char(11)		primary key,
+		rank		varchar(20),
+		foreign key (tck_no) references staff
+	);
+
+rented_assistant
+Relational Model: rented_assistant(plate, start_time, tck_no) 
+Functional Dependencies: -
+Candidate Keys: {(plate, start_time, tck_no)}
+Normal Form: BCNF
+Table Definition:
+	create table rented_assistant (
+		plate		varchar(10)		primary key,
+		start_time	varchar(10)		primary key,
+		tck_no		char(11)		primary key,
+		foreign key (plate, start_time) references rent,
+		foreign key (tck_no) references assistant
+	);
+
+customer
+Relational Model: customer(tck_no, name, surname, dateofbirth, gender)
+Functional Dependencies: tch_no -> name, surname, dateofbirth, gender
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition:
+	create table customer (
+		tck_no		char(10)		primary key,
+		name		varchar(35)		not null,
+		surname	varchar(15)		not null,
+		dateofbirth	varchar(10),
+		gender		char(1)
+	);
+
+rented_by
+Relational Model: rented_by(tck_no, plate, start_time)
+Functional Dependencies: -
+Candidate Keys: {(tck_no, plate, start_time)}
+Normal Form: BCNF
+Table Definition:
+	create table rented_by(
+		tck_no		char(11)		primary key,
+		plate		varchar(10)		primary key,
+		start_time	varchar(10)		primary key,
+		foreign key (tck_no) references customer,
+		foreign key (plate) references bus,
+	);
+
+garage
+Relational Model: garage(city, address, phone, capacity)
+Functional Dependencies: city, address -> phone, capacity
+Candidate Keys: {(city, address)}
+Normal Form: BCNF
+Table Definition:
+	create table garage (
+		city		varchar(20)		primary key,
+		address	varchar(100)		primary key,
+		phone		varchar(15)		not null,
+	);
+
+is_at
+Relational Model: is_at(city, address, plate)
+Functional Dependencies: -
+Candidate Keys: {(city, address, plate)}
+Normal Form: BCNF
+Table Definition:
+	create table is_at (
+		city		varchar(20)		primary key,
+		address	varchar(100)		primary key,
+		plate		varchar(10)		primary key,
+		foreign key (city, address) references garage,
+		foreign key (plate) references bus
+	);
+
+bus_type
+Relational Model: bustype(brand, model, year, layout, passenger_capacity, storage_capacity, height, width, length)
+Functional Dependencies: brand, model, year -> layout, passenger_capacity, storage_capacity, height, width, length
+Candidate Keys: {(brand, model, year)}
+Normal Form: BCNF
+Table Definition:
+	create table bus_type (
+		brand			varchar(20)		primary key,
+		model			varchar(20)		primary key,
+		year			char(4)			primary key,
+		layout			smallint		not null,
+		passenger_capacity	smallint		not null,
+		storage_capacity	numeric(3,2)		not null,
+		height			numeric(1,2),
+		width			numeric(1,2),
+		length			numeric(2,1)
+	);
+
+bustype_feature
+Relational Model: bustype_feature(brand, model, year, feature_name)
+Functional Dependencies: -
+Candidate Keys: {(brand, model, year, feature_name)}
+Normal Form: BCNF
+Table Definition:
+	create table bustype_feature (
+		brand			varchar(20)		primary key,
+		model			varchar(20)		primary key,
+		year			char(4)			primary key,
+		feature_name		varchar(30)		primary key,
+		foreign key (brand, model, year) references bust_type,
+	);	
+
+terminal
+Relational Model: terminal(city, address, phone, capacity)
+Functional Dependencies: city, address -> phone, capacity
+Candidate Keys: {(city, address)}
+Normal Form: BCNF
+Table Definition:
+	create table terminal (
+		city			varchar(20)		primary key,
+		address		varchar(100)		primary key,
+		phone			varchar(15)		not null,
+		capacity		smallint		not null
+	);
+
+bus
+Relational Model: bus(plate, brand, model, year, roaming_distance, start_date, is_operational)
+Functional Dependencies: plate -> brand, model, year, raoming_distance, start_date, is_operational
+Candidate Keys: {(plate)}
+Normal Form: BCNF
+Table Definition:
+	create table bus (
+		plate			varchar(10)		primary key,
+		brand			varchar(20)		primary key,
+		model			varchar(20)		primary key,
+		year			char(4)			primary key,
+		roaming_distance	int	default 0	not null,
+		start_date		varchar(10)		not null,
+		is_operational		char(1)			not null,
+		foreign key (brand, model, year) references bust_type
+	);
+
+route
+Relational Model: route(route_id, depart_city, depart_address, arrive_city, arrive_address, 				estimated_duration, distance, number_of_breaks)
+Functional Dependencies: route_id -> depart_city, depart_address, arrive_city, arrive_address, estimated_duration, distance, number_of_breaks)
+Candidate Keys: {(route_id)}
+Normal Form: BCNF
+Table Definition:
+	create table route (
+		route_id		char(12)		primary key,
+		depart_city		varchar(20)		not null,
+		depart_address	varchar(100)		not null,
+		arrive_city		varchar(20)		not null,
+		arrive_address		varchar(100)		not null,
+		estimated_duration	int,
+		distance		int			not null,
+		number_of_breaks	smallint default 0	not null,
+		foreign key (depart_city, depart_address) references terminal,
+		foreign key (arrive_city, arrive_address) references terminal
+	);
+
+stopover
+Relational Model: stopover(city, address, route_id)
+Functional Dependencies: -
+Candidate Keys: {(city, address, route_id)}
+Normal Form: BCNF
+Table Definition:
+	create table stopover (
+		city			varchar(20)		primary key,
+		address		varchar(100)		primary key,
+		route_id		char(12)		primary key,
+		foreign key (route_id) references route,
+		foreign key (city, address) references terminal
+	);
+
+service_area
+Relational Model: servicearea(address)
+Functional Dependencies: -
+Candidate Keys: {(address)}
+Normal Form: BCNF
+Table Definition:
+	create table service_area (
+		address		varchar(100)		primary key
+	);
+
+break
+Relational Model: break(route_id, address, duration)
+Functional Dependencies: route_id, address -> duration
+Candidate Keys: {(route_id, address)}
+Normal Form: BCNF
+Table Definition:
+	create table break (
+		route_id		char(12)		primary key,
+		address		varchar(100)		primary key,
+		duration		int			not null,
+		foreign key (route_id) references route,
+		foreign key (address) references servise_area
+	);
+
+voyage
+Relational Model: voyage(plate, route_id, departure_time, arrival_time, price, occupied_seats)
+Functional Dependencies: plate, route_id, departure_time -> arrival_time, price
+Candidate Keys: {(plate, route_id, departure_time)}
+Normal Form: BCNF
+Table Definition:
+	create table voyage (
+		plate			varchar(10)		primary key
+		route_id		char(12)		primary key
+		departure_time	varchar(10)		primary key
+		arrival_time		varchar(10),
+		price			numeric(3,2)		not null,
+		occupied_seats	int			not null,
+		foreign key (plate) references bus,
+		foreign key (route_id) references route
+	);
+
+reservation
+Relational Model: reservation(tck_no, plate, route_id, departure_time, seat, time, price)
+Functional Dependencies: tck_no, plate, route_id, seat -> time, price
+Candidate Keys: {(tck_no, plate, route_id, seat)}
+Normal Form: BCNF
+Table Definition: 
+	create table reservation (
+		tck_no			char(11)		primary key,
+		plate			varchar(10)		primary key,
+		route_id		char(12)		primary key,
+		departure_time	varchar(10)		primary key,
+		seat			char(2)			primary key,
+		time			varchar(10)		not null,
+		price			numeric(3,2)		not null,
+		foreign key (tck_no) references customer,
+		foreign key (plate,route_id, departure_time) references voyage
+	);
+
+associated_driver
+Relational Model: associated_driver(tck_no, plate, route_id, departure_time)
+Functional Dependencies: -
+Candidate Keys: {(tck_no, plate, route_id, departure_time
+Normal Form: BCNF
+Table Definition:
+	create table associated_driver (
+		tck_no			char(11)		primary key,
+		plate			varchar(10)		primary key,
+		route_id		char(12)		primary key,
+		departure_time	varchar(10)		primary key,
+		foreign key (tck_no) references customer,
+		foreign key (plate,route_id, departure_time) references voyage
+	);
+
+associated_assistant
+Relational Model: associated_assistant(tck_no, plate, route_id, departure_time)
+Functional Dependencies: -
+Candidate Keys: {(tck_no, plate, route_id, departure_time)}
+Normal Form: BCNF
+Table Definition:
+	create table associated_assistant (
+		tck_no			char(11)		primary key,
+		plate			varchar(10)		primary key,
+		route_id		char(12)		primary key,
+		departure_time	varchar(10)		primary key,
+		foreign key (tck_no) references customer,
+		foreign key (plate,route_id, departure_time) references voyage
+	);
+
+ticket
+Relational Model: ticket(tck_no, plate, route_id, departure_time, seat, payment_type,payment_time, price)
+Functional Dependencies: tck_no, plate, route_id, departure_time, seat -> payment_type, payment_time, price
+Candidate Keys: {(tck_no, plate, route_id, departure_time, seat)}
+Normal Form: BCNF
+Table Definition:
+	create table ticket (
+		tck_no			char(11)		primary key,
+		plate			varchar(10)		primary key,
+		route_id		char(12)		primary key,
+		departure_time	varchar(10)		primary key,
+		seat			char(2)			primary key,
+		payment_type	varchar(5)		not null,
+		payment_time	varchar(1o)		not null,
+		price			numeric(3,2)		not null,
+		foreign key (tck_no) references customer,
+		foreign key (plate,route_id, departure_time) references voyage
+	);
+ 
+
+# Functional Dependencies and Normalization of Tables
+All functional dependencies are shown in section 2.2. Detailed Schemas. All the relations are already in BCNF form. There is no need for decomposition. 
+
+
+# Functional Components
+
+## Use Cases/ Scenarios
+
+![Use Case Diagram]({{ site.baseurl }}/images/usecase.png)
+
+
+### Customer Operations
+* Customers can view scheduled voyages.
+* Customers can view seat status of each voyage.
+* Customers can make reservations for empty seats of voyages online.
+* Customers can buy tickets for empty seats of voyages online.
+* Customers can cancel their reservations for voyages online.
+* Customers can rent buses for specific time intervals.
+* Customers can rent buses with or without bus crew.
+
+### Salesperson Operations
+* Salespeople can view list of tickets and reservations.
+* Salespeople can view scheduled voyages.
+* Salespeople can view details (seat information, reserved, arrival and departure times) of any voyage.
+* Salespeople can sale tickets to customers.
+* Salespeople can apply discounts on standard ticket prices.
+* Salespeople can make reservations for customers.
+* Salespeople can cancel reservations.
+* Salespeople can refund tickets.
+
+### Terminal Agent Operations
+* Terminal agents can view scheduled voyages along with their seat status.
+* Terminal agents can enter arrival times of the buses.
+* Terminal agents can cancel voyages with zero passengers.
+
+### Manager Operations
+* Managers can arrange (add/remove/change) voyages.
+* Managers can register/unregister buses to the system.
+* Managers can create/remove bus types.
+* Managers can create routes.
+* Managers can set standard prices for specific route-bus pairs.
+* Managers can lease buses.
+* Managers can adjust salaries of salespeople, terminal agents, drivers and assistants.
+* Managers can hire/fire salespeople, terminal agents, drivers and assistants.
+* Managers can update staff info.
+* Managers can register/unregister terminals, branches and service areas.
+* Managers can query average passenger load factors of routes.
+
+
+## Algorithms
+
+### Modifying Entities
+
+Manager can add, remove and edit entities such as busses, terminals, routes, staff etc. These function first check if the current user has the manager privileges and display an error if it does not. An input form is display for an add function. Input is validated in both client-side and server-side. If input is valid, new rows are added to the corresponding tables. A list of existing entities are display in a table for a remove and edit functions. Items selected for removal are deleted from database, or an edit form is displayed for edit functions.
+
+### Creating Voyage
+
+Manager can create voyages using existing busses and routes. The input form for creating voyages have a timetable. Manager can create a single voyage as well as multiple voyages in a single step. Validation step determines the schedule conflicts and displays related errors.
+
+### Making Reservation
+
+Salesperson (in sales-office) and customer (on the internet) can make reservations for voyages. Voyage and seat options are displayed in the reservation form. User cannot make reservation for a sold or reserved seat. 
+
+### Purchasing/Selling Ticket
+
+A ticket is either sold by a salesperson or purchased by a customer online. Either way, the inputs and ticket creation are the same. A ticket can be purchased directly, or a reservation can be converted to a ticket by paying the fee. If a new ticket is being created, a similar form to the reservation form is displayed and filled. If customer is buying ticket for a reservation, this step is omitted. In the last step, the payment is done.
+
+### Canceling Reservation
+
+Salesperson and customer can list and cancel reservations. Salesperson has right to cancel any reservation whereas customer can only cancel his/her reservations.
+
+### Renting Bus
+
+Busses can be rented from the sale-offices. Hence, only salesperson has the ability to rent a bus. During the process, salesperson selects the bus and time range for renting. If the selected bus has a voyage anytime during the time range, renting cannot be done and an error is displayed. Renting fee is entered by the salesperson.
+
+## Data Structures
+
+Built-in MySQL data structures will be used. There is no need for additional data types.
+ 
+# User Interface Design and Corresponding SQL Statements
+
+## Login
+Input: @tck_no, @password
+Process: User provides his tc identity number and password. System checks if a corresponding record exists. If it does, then the user is authorized. Otherwise an error screen is displayed.
+
+![]({{ site.baseurl }}/images/ui1.png)
+
+	SQL Statements:
+	SELECT *
+	FROM systemuser
+	WHERE tck_no = @tck_no
+	  AND password=@password
+
+## Bus Rental
+Input: @end_time, @price, @rented_from
+Process: Only a salesperson can make rental operation. There is no customer interface for this purpose. Salesperson asks for list of available buses. System shows a list of all buses that are currently in one of the garages (not travelling). Salesperson clicks “rent” and enters customer information through another form.
+
+![]({{ site.baseurl }}/images/ui2.png)
+
+SQL Statements:
+	SELECT plate,
+	       model,
+	       brand,
+	       city,
+	       address
+	FROM bus,
+	     is_at
+	WHERE is_operational = 'operational'
+	  AND bus.plate = is_at.plate
+	variable passed: @plate
+	INSERT INTO rent
+	VALUES(@plate,
+	       getCurrentDate(),
+	       @end_time,
+	       @price,
+	       @rented_from)
+
+
+## Manager Dashboard
+Input: -
+Process: System shows various information about active voyages, busses, garages and active rentals.
+
+![]({{ site.baseurl }}/images/ui3.png)
+
+SQL Statements:
+
+List voyages:
+	SELECT v.departure_time,
+	       v.arrival_time,
+	       r.depart_ciy,
+	       r.depart_address,
+	       r.arrive_city,
+	       r.arrive_address,
+	       b.model
+	FROM voyage v,
+	     bus b,
+	     route r
+	WHERE v.plate=b.plate
+	  AND v.route_id = r.id
+	ORDER BY v.departure_time
+	
+List buses:
+	SELECT b.plate,
+	       b.model,
+	       i.city,
+	       i.address
+	FROM bus b, is_at i,
+	WHERE b.plate=i.plate
+	  OR (b.plate = v.plate
+	      AND v.arrival_time IS NULL)
+
+List garages:
+	SELECT g.city,
+	       g.address,
+	       count(i.plate)
+	FROM garage g,
+	     is_at i
+	WHERE i.cty=g.city
+	  AND i.address = g.address
+	GROUP BY i.city,
+	         i.address
+
+List rentals:
+	SELECT c.name,
+	       r.start_time,
+	       r.end_time,
+	       b.model,
+	FROM bus b,
+	     rent r,
+	     rented_by,
+	     customer c
+	WHERE r.plate=b.plate
+	  AND rented_by.plate = r.plate
+	  AND r.start_time = rented_by.start_time rented_by.tck_no = c.tck_no
+
+
+## List Voyages:
+Input: @dep_city, @arr_city, @dep_time
+Process: Salesperson enters departure city, arrival city and a date. System shows appropriate voyages.
+
+![]({{ site.baseurl }}/images/ui4.png)
+
+SQL Statements:
+	SELECT r.depart_city,
+	       r.depart_address,
+	       r.arrive_city,
+	       r.arrive_address,
+	       v.departure_time,
+	       v.arrival_time,
+	       v.occupied_seats,
+	       bt.passanger_capacity b.model,
+	FROM bus b,
+	     route r,
+	     voyage v,
+	     bustype bt
+	WHERE r.id = v.route_id
+	  AND v.plate = b.plate
+	  AND bt.brand = b.brand
+	  AND bt.model = b.model
+	  AND bt.year = b.year
+	  AND r.depart_city=@dep_city
+	  AND r.arrive_city = @arr_city
+	  AND v.departure_time = @dep_time
+
+
+## List Reservations
+Input: @time
+Process: Salesperson wants to list all the reservations on a specific day. He enters the day. Sytem lists all the reservations mad efor that particular day. Later salesperson may filter these results by name. Salesperson can cancel a reservation by clicking the button. System passes required variables to cancel query.
+
+![]({{ site.baseurl }}/images/ui5.png)
+
+SQL Statements:
+	SELECT c.name,
+		c.tck_no,
+	       c.surname,
+	       res.price,
+		res.seat,
+		ro.id,
+	       ro.depart_city,
+	       ro.arrive_city,
+		v.plate
+	FROM customer c,
+	     reservation res,
+	     route ro,
+	     voyage v
+	WHERE res.tck_no = c.tck_no
+	  AND res.plate = v.plate
+	  AND res.route_id = v.route_id
+	  AND res.departure_time = v.departure_time
+	  AND v.route_id = ro.id
+	  AND res.time=@time
+
+Cancel:
+	DELETE
+	FROM reservation
+	WHERE tck_no=@tck_no
+	  AND plate=@plate
+	  AND route_id=@route_id
+	  AND departure_time=@dtime
+	  AND seat=@seat
+
+
+## Create Ticket
+Input: @tck_no,@plate,@route_id, @departure_time, @seat, @payment_type, @price, @name, @surname, @dateofbirth, @gender
+Process: Salesperson chose a voyage before this step. All voyage, bus and route information was passed from previous step. In this step salesperson provides tck_no, seat, payment_type, name, surname, dateofbirth, gender inputs.
+
+![]({{ site.baseurl }}/images/ui6.png)
+
+SQL Statements:
+	INSERT INTO ticket
+	VALUES(@tck_no,
+	       @plate,
+	       @route_id,
+	       @departure_time,
+	       @seat,
+	       @payment_type,
+	       getCurrentTime(),
+	       @price)
+
+INSERT INTO customer(@tck_no, @name, @surname, @dateofbirth, @gender)
+*customer table are protected from having duplicates by a trigger
+
+
+## Make Reservation
+Input: @tck_no,@plate,@route_id, @departure_time, @seat, @payment_type, @price, @name, @surname, @dateofbirth, @gender
+Process: Salesperson chose a voyage before this step. All voyage, bus and route information was passed from previous step. In this step salesperson provides tck_no, seat, name, surname, dateofbirth, gender inputs.
+
+![]({{ site.baseurl }}/images/ui7.png)
+ 
+	INSERT INTO reservation
+	VALUES(@tck_no,
+	       @plate,
+	       @route_id,
+	       @departure_time,
+	       @seat,
+	       getCurrentTime(),
+	       @price)
+
+INSERT INTO customer(@tck_no, @name, @surname, @dateofbirth, @gender)
+*customer table are protected from having duplicates by a trigger
+
+
+## Edit Bus
+Input: @plate, @type, @is_operational
+Process: Manager chose a bus to edit at previous step. Plate information was passed to this step from the previous one. He enters new information and system updates the bus info.
+
+![]({{ site.baseurl }}/images/ui8.png)
+
+SQL Statements:
+	UPDATE bus
+	SET is_operational=@is_operational,
+	    type=@type
+	WHERE plate=@plate
+
+
+## Edit/Remove Bus Type
+Input: @model,@brand, @layout,@storage_capacity, @passanger_capacity,@height, @width,@length,@year
+Process: Manager wants to list bus types. System makes a query to list all the bus types. System makes another query to retrieve features for bus types for each bus type and combine the information. Manager later can filter bus types by model, brand or year. Delete operation is only valid when no bus is of that bus type. This restriction is granted by an assertion which will be introduced in the next section of this document. Editing a bus type is done by another form after clicking “edit” here. Required information is passed to next form.
+
+![]({{ site.baseurl }}/images/ui9.png)
+
+SQL Statements:
+	SELECT brand,
+	       model,
+	       year,
+	       layout,
+	       passanger_capacity
+	FROM bustype
+
+	SELECT feature_name features
+	FROM bustype_feature
+	WHERE brand=@brand
+	  AND model=@model
+	  AND YEAR=@year
+
+DELETE
+	FROM bustype
+	WHERE model=@model
+	  AND brand=@brand
+	  AND year=@year
+
+UPDATE bustype
+	SET model=@model,
+	    brand=@brand,
+	    layout=@layout,
+	    storage_capacity=@storage_capacity,
+	    passanger_capacity=@passanger_capacity,
+	    height=@height,
+	    width=@width,
+	    length=@length ,
+	    year=@year
+
+
+## Terminal Agent Dashboard
+Input: @time, @plate, @departure_time, @arrival_time
+Process: Terminal agent is responsible for entering arrival and departure times of buses. System shows a list of arriving buses. Select statement for listing is the same as salesperson’s. Update of departure times is done via another form which is accessible from this screen by clicking “edit” button. In that screen, terminal agent can enter arrival time.
+
+![]({{ site.baseurl }}/images/ui10.png)
+
+SQL Statements:
+	UPDATE voyage
+	SET arrival_time=@arrival_time
+	WHERE plate=@plate
+	  AND route_id = @route_id
+	  AND departure_time=@departure_time
+
+
+## Customer Dashboard
+Input: @departure_city, @arrival_city, @departure_date
+Process: Customer wants to buy a ticket. He provides departure, arrival cities and a date. System shows available voyages.
+
+![]({{ site.baseurl }}/images/ui11.png)
+
+SQL Statements:
+	SELECT r.depart_city,
+	       r.depart_address,
+	       r.arrive_city,
+	       r.arrive_address,
+	       v.departure_time,
+	       v.arrival_time,
+	       b.model,
+	       bt.passanger_capacity,
+	       v.occupied_seats
+	FROM bus b,
+	     bustype bt,
+	     route r,
+	     voyage v
+	WHERE r.id = v.route_id
+	  AND bt.model = b.model
+	  AND bt.brand=b.brand
+	  AND bt.year=b.year
+	  AND v.plate = b.plate
+	  AND r.depart_city=@departure_city
+	  AND r.arrive_city = @arrival_city
+	  AND v.departure_time = @departure_time
+	  AND v.occupied_seats<bt.passanger_capacity
+ 
+# Advanced Database Components
+
+## Views
+Note: Only direct user of the database is the front-end application, hence views actually are not needed in this case. But for educational purposes, we provide views as actors of use-cases are direct users of the database.
+* Terminal agent updates arrival and departure times of voyages and knows the plate of the bus beforehand. Hence, terminal agent does not need to have access to other attributes of voyage table.
+	CREATE VIEW voyage_times AS
+	SELECT plate,
+	       departure_time,
+	       arrival_time
+	FROM voyage
+
+* Finding phone number of a terminal is an action that a customer can perform. But customer must not have access to capacity information of the terminal. This view is read-only.
+	CREATE VIEW terminal_phone AS
+	SELECT city,
+	       address,
+	       telephone
+	FROM terminal
+
+* Employees may want to retrieve phone numbers of other employees from the database. For example, a salesperson can query phone number of a terminal agent, but the salesperson should not be able to see the salary of the terminal agent.
+	CREATE VIEW staff_phone AS
+	SELECT tck_no,
+	       name,
+	       phone
+	FROM staff
+
+* Salesperson can see busses for renting them, but busses that are not operational are not needed. The salesperson does also not need to see roaming distance and start time of a bus.
+	CREATE VIEW operational_busses AS
+	SELECT plate,
+	       brand,
+	       model,
+	       year
+	FROM bus
+	WHERE is_operational = TRUE
+
+
+## Stored Procedures
+* Calculating passenger load factors
+Registration and authentication procedures
+* Counting the number of busses at each garage
+* Calculating incomes from tickets sold and expenses due to employee salaries and bus costs over travel distances
+* Calculating deviations of voyage durations with respect to estimated durations and determining new estimates
+ 
+
+## Reports
+* Total Salary Bill
+	SELECT sum(salary)
+	FROM staff
+
+* Usage Rates of Busses (total travel distance over time) 
+	SELECT plate,
+	       roaming_distance/(CURRENT_DATE() - start_date)
+	FROM bus
+	ORDER BY roaming_distance/(CURRENT_DATE() - start_date) DESC
+
+* Passenger Load Factors of Routes
+	SELECT avg(V.occupied_seats / B.capacity)
+	FROM voyage AS V NATURAL
+	LEFT OUTER JOIN bus NATURAL
+	LEFT OUTER JOIN bus_type AS B
+	WHERE V.route_id = @routeID
+
+* Customers with their total spendings(traveling) in decreasing order
+	SELECT tck_no,
+	       sum(price) AS total_spending
+	FROM customer
+	NATURAL JOIN ticket
+	GROUP BY tck_no
+	ORDER BY total_spending DESC
+
+* Customers with their total spendings(renting) in decreasing order
+	SELECT tck_no,
+	       sum(price) AS total_spending
+	FROM customer
+	NATURAL JOIN ticket
+	GROUP BY tck_no
+	ORDER BY total_spending DESC
+
+
+## Triggers
+* On insert operation into ticket table, corresponding reservation row (if it exist) is deleted.
+* On insert operation into voyage table, roaming_distance of associated bus is increased by the distance of the route.
+* On delete operation from voyage table, roaming_distance of associated bus is decreased by the distance of the route.
+* On insert operation into ticket table, occupied_seats of associated voyage is increased.
+* On delete operation from ticket table, occupied_seats of associated voyage is decreased.
+
+
+## Constraints
+* All tck_no attributes are unique Turkish Identification Numbers (TIN) with 11 digits. The attribute cannot get a value with less or more digits. If the employee does not have a TIN, an invalid TIN with 11 digits that is unique to that employee must be used.
+* license_no attribute of driver table must be a valid Turkish Driver's License Number with 7 digits.
+* end_time attribute of rent table must have a value of date that comes after value of start_time.
+* height, width, length attributes of bustype table, roaming_distance in bus, and distance in route have the units of meter.
+* In route table, depart_city and depart_address pair cannot be the same with arrive_city and arrive_address pair.
+* password attribute of systemuser table can have a value at least 8 characters long.
+* All price, distance, capacity and duration attributes must have a non-negative value.
+* When a voyage is being created or a bus is being rented, is_operational attribute of the associated bus must be true.
+ 
+# Implementation Plan
+We will use MySQL Server as database management system for our project. We are planning to use PHP, Code Igniter and JavaScript for software and user interface parts of our project. CodeIgniter is a PHP framework which is optimized for MVC use.
