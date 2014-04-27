@@ -608,7 +608,8 @@ Process: User provides his tc identity number and password. System checks if a c
 
 ![]({{ site.baseurl }}/images/ui1.png)
 
-	SQL Statements:
+SQL Statements:
+
 	SELECT *
 	FROM systemuser
 	WHERE tck_no = @tck_no
@@ -621,6 +622,7 @@ Process: Only a salesperson can make rental operation. There is no customer inte
 ![]({{ site.baseurl }}/images/ui2.png)
 
 SQL Statements:
+
 	SELECT plate,
 	       model,
 	       brand,
@@ -648,6 +650,7 @@ Process: System shows various information about active voyages, busses, garages 
 SQL Statements:
 
 List voyages:
+
 	SELECT v.departure_time,
 	       v.arrival_time,
 	       r.depart_ciy,
@@ -663,6 +666,7 @@ List voyages:
 	ORDER BY v.departure_time
 	
 List buses:
+
 	SELECT b.plate,
 	       b.model,
 	       i.city,
@@ -673,6 +677,7 @@ List buses:
 	      AND v.arrival_time IS NULL)
 
 List garages:
+
 	SELECT g.city,
 	       g.address,
 	       count(i.plate)
@@ -684,6 +689,7 @@ List garages:
 	         i.address
 
 List rentals:
+
 	SELECT c.name,
 	       r.start_time,
 	       r.end_time,
@@ -704,6 +710,7 @@ Process: Salesperson enters departure city, arrival city and a date. System show
 ![]({{ site.baseurl }}/images/ui4.png)
 
 SQL Statements:
+
 	SELECT r.depart_city,
 	       r.depart_address,
 	       r.arrive_city,
@@ -733,6 +740,7 @@ Process: Salesperson wants to list all the reservations on a specific day. He en
 ![]({{ site.baseurl }}/images/ui5.png)
 
 SQL Statements:
+
 	SELECT c.name,
 		c.tck_no,
 	       c.surname,
@@ -754,6 +762,7 @@ SQL Statements:
 	  AND res.time=@time
 
 Cancel:
+
 	DELETE
 	FROM reservation
 	WHERE tck_no=@tck_no
@@ -770,6 +779,7 @@ Process: Salesperson chose a voyage before this step. All voyage, bus and route 
 ![]({{ site.baseurl }}/images/ui6.png)
 
 SQL Statements:
+
 	INSERT INTO ticket
 	VALUES(@tck_no,
 	       @plate,
@@ -789,7 +799,9 @@ Input: @tck_no,@plate,@route_id, @departure_time, @seat, @payment_type, @price, 
 Process: Salesperson chose a voyage before this step. All voyage, bus and route information was passed from previous step. In this step salesperson provides tck_no, seat, name, surname, dateofbirth, gender inputs.
 
 ![]({{ site.baseurl }}/images/ui7.png)
- 
+
+SQL Statements:
+
 	INSERT INTO reservation
 	VALUES(@tck_no,
 	       @plate,
@@ -810,6 +822,7 @@ Process: Manager chose a bus to edit at previous step. Plate information was pas
 ![]({{ site.baseurl }}/images/ui8.png)
 
 SQL Statements:
+
 	UPDATE bus
 	SET is_operational=@is_operational,
 	    type=@type
@@ -823,6 +836,7 @@ Process: Manager wants to list bus types. System makes a query to list all the b
 ![]({{ site.baseurl }}/images/ui9.png)
 
 SQL Statements:
+
 	SELECT brand,
 	       model,
 	       year,
@@ -836,22 +850,22 @@ SQL Statements:
 	  AND model=@model
 	  AND YEAR=@year
 
-DELETE
-	FROM bustype
-	WHERE model=@model
-	  AND brand=@brand
-	  AND year=@year
+	DELETE
+		FROM bustype
+		WHERE model=@model
+		  AND brand=@brand
+		  AND year=@year
 
-UPDATE bustype
-	SET model=@model,
-	    brand=@brand,
-	    layout=@layout,
-	    storage_capacity=@storage_capacity,
-	    passanger_capacity=@passanger_capacity,
-	    height=@height,
-	    width=@width,
-	    length=@length ,
-	    year=@year
+	UPDATE bustype
+		SET model=@model,
+		    brand=@brand,
+		    layout=@layout,
+		    storage_capacity=@storage_capacity,
+		    passanger_capacity=@passanger_capacity,
+		    height=@height,
+		    width=@width,
+		    length=@length ,
+		    year=@year
 
 
 ## Terminal Agent Dashboard
@@ -861,6 +875,7 @@ Process: Terminal agent is responsible for entering arrival and departure times 
 ![]({{ site.baseurl }}/images/ui10.png)
 
 SQL Statements:
+
 	UPDATE voyage
 	SET arrival_time=@arrival_time
 	WHERE plate=@plate
@@ -875,6 +890,7 @@ Process: Customer wants to buy a ticket. He provides departure, arrival cities a
 ![]({{ site.baseurl }}/images/ui11.png)
 
 SQL Statements:
+
 	SELECT r.depart_city,
 	       r.depart_address,
 	       r.arrive_city,
@@ -903,6 +919,7 @@ SQL Statements:
 ## Views
 Note: Only direct user of the database is the front-end application, hence views actually are not needed in this case. But for educational purposes, we provide views as actors of use-cases are direct users of the database.
 * Terminal agent updates arrival and departure times of voyages and knows the plate of the bus beforehand. Hence, terminal agent does not need to have access to other attributes of voyage table.
+
 	CREATE VIEW voyage_times AS
 	SELECT plate,
 	       departure_time,
@@ -910,6 +927,7 @@ Note: Only direct user of the database is the front-end application, hence views
 	FROM voyage
 
 * Finding phone number of a terminal is an action that a customer can perform. But customer must not have access to capacity information of the terminal. This view is read-only.
+
 	CREATE VIEW terminal_phone AS
 	SELECT city,
 	       address,
@@ -917,6 +935,7 @@ Note: Only direct user of the database is the front-end application, hence views
 	FROM terminal
 
 * Employees may want to retrieve phone numbers of other employees from the database. For example, a salesperson can query phone number of a terminal agent, but the salesperson should not be able to see the salary of the terminal agent.
+
 	CREATE VIEW staff_phone AS
 	SELECT tck_no,
 	       name,
@@ -924,6 +943,7 @@ Note: Only direct user of the database is the front-end application, hence views
 	FROM staff
 
 * Salesperson can see busses for renting them, but busses that are not operational are not needed. The salesperson does also not need to see roaming distance and start time of a bus.
+
 	CREATE VIEW operational_busses AS
 	SELECT plate,
 	       brand,
@@ -943,16 +963,19 @@ Registration and authentication procedures
 
 ## Reports
 * Total Salary Bill
+
 	SELECT sum(salary)
 	FROM staff
 
 * Usage Rates of Busses (total travel distance over time) 
+
 	SELECT plate,
 	       roaming_distance/(CURRENT_DATE() - start_date)
 	FROM bus
 	ORDER BY roaming_distance/(CURRENT_DATE() - start_date) DESC
 
 * Passenger Load Factors of Routes
+
 	SELECT avg(V.occupied_seats / B.capacity)
 	FROM voyage AS V NATURAL
 	LEFT OUTER JOIN bus NATURAL
@@ -960,6 +983,7 @@ Registration and authentication procedures
 	WHERE V.route_id = @routeID
 
 * Customers with their total spendings(traveling) in decreasing order
+
 	SELECT tck_no,
 	       sum(price) AS total_spending
 	FROM customer
@@ -968,6 +992,7 @@ Registration and authentication procedures
 	ORDER BY total_spending DESC
 
 * Customers with their total spendings(renting) in decreasing order
+
 	SELECT tck_no,
 	       sum(price) AS total_spending
 	FROM customer
