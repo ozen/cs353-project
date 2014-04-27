@@ -109,11 +109,18 @@ ticket(tck_no, plate, route_id, departure_time, seat, payment_type, payment_time
 ## Detailed Schemas
 
 staff
+
 Relational Model: staff(tck_no, name, salary, phone, home_address, start_date)
+
 Functonal Dependencies: tck_no -> name, salary, phone, home_address, start_date
+
 Candidate Keys: {(tck_no)}
+
 Normal Form: BCNF
+
 Table Definition: 
+
+```sql
 create table staff (
 	tck_no 	char(8)		primary key,
 	name		varchar(50)	not null,
@@ -122,20 +129,27 @@ create table staff (
 	home_address	varchar(100)	not null,
 	start_date	varchar(10)	not null
 );
+```
 
 system_user
+
 Relational Model: system_user(tck_no, password)
+
 Functional Dependencies: tck_no -> password
+
 Candidate Keys: {(tck_no)}
+
 Normal Form: BCNF
+
 Table Definition:
-``` sql
+
+{% highlight sql %}
 create table system_user (
 	tck_no		char(8)		primary key,
 	password	varchar(20)	not null,
 	foreign key (tck_no) references staff
 );
-```
+{% endhighlight %}
 
 manager
 Relational Model: manager(tck_no, position)
