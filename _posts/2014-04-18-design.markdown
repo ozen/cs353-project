@@ -141,12 +141,12 @@ create table system_user (
 );
 ```
 
-manager
-Relational Model: manager(tck_no, position)
-Functional Dependencies: tck_no -> position
-Candidate Keys: {(tck_no)}
-Normal Form: BCNF
-Table Definition:
+### manager
+Relational Model: manager(tck_no, position)  
+Functional Dependencies: tck_no -> position  
+Candidate Keys: {(tck_no)}  
+Normal Form: BCNF  
+Table Definition:  
 	create table manager (
 		tck_no		char(11)		primary key,
 		position	varchar(40),
