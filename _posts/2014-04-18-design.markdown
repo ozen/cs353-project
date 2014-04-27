@@ -128,12 +128,14 @@ Relational Model: system_user(tck_no, password)
 Functional Dependencies: tck_no -> password
 Candidate Keys: {(tck_no)}
 Normal Form: BCNF
-Table Definition: 
-	create table system_user (
-		tck_no		char(8)		primary key,
-		password	varchar(20)	not null,
-		foreign key (tck_no) references staff
-	);
+Table Definition:
+``` sql
+create table system_user (
+	tck_no		char(8)		primary key,
+	password	varchar(20)	not null,
+	foreign key (tck_no) references staff
+);
+```
 
 manager
 Relational Model: manager(tck_no, position)
