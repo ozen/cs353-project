@@ -110,11 +110,11 @@ ticket(tck_no, plate, route_id, departure_time, seat, payment_type, payment_time
 
 ### staff
 
-Relational Model: staff(tck_no, name, salary, phone, home_address, start_date)
-Functonal Dependencies: tck_no -> name, salary, phone, home_address, start_date
-Candidate Keys: {(tck_no)}
-Normal Form: BCNF
-Table Definition: 
+Relational Model: staff(tck_no, name, salary, phone, home_address, start_date)  
+Functonal Dependencies: tck_no -> name, salary, phone, home_address, start_date  
+Candidate Keys: {(tck_no)}  
+Normal Form: BCNF  
+Table Definition:  
 ```sql
 create table staff (
 	tck_no 	char(8)		primary key,
@@ -128,11 +128,11 @@ create table staff (
 
 ### system_user
 
-Relational Model: system_user(tck_no, password)
-Functional Dependencies: tck_no -> password
-Candidate Keys: {(tck_no)}
-Normal Form: BCNF
-Table Definition:
+Relational Model: system_user(tck_no, password)  
+Functional Dependencies: tck_no -> password  
+Candidate Keys: {(tck_no)}  
+Normal Form: BCNF  
+Table Definition:  
 ```sql
 create table system_user (
 	tck_no		char(8)		primary key,
@@ -142,16 +142,19 @@ create table system_user (
 ```
 
 ### manager
-Relational Model: manager(tck_no, position)  
+
+Relational Model: manager(tck_no, position) 
 Functional Dependencies: tck_no -> position  
 Candidate Keys: {(tck_no)}  
 Normal Form: BCNF  
-Table Definition:  
-	create table manager (
-		tck_no		char(11)		primary key,
-		position	varchar(40),
-		foreign key (tck_no) references staff
-	);
+Table Definition: 
+```sql 
+create table manager (
+	tck_no		char(11)		primary key,
+	position	varchar(40),
+	foreign key (tck_no) references staff
+);
+```
 
 sales_person
 Relational Model: sales_person(tck_no, office_city, office_address)
