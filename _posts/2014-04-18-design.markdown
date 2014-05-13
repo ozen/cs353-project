@@ -115,7 +115,6 @@ Functonal Dependencies: tck_no -> name, salary, phone, home_address, start_date
 Candidate Keys: {(tck_no)}  
 Normal Form: BCNF  
 Table Definition:  
-```sql  
 create table staff (  
 	tck_no 	char(8)		primary key,  
 	name		varchar(50)	not null,  
@@ -124,7 +123,6 @@ create table staff (
 	home_address	varchar(100)	not null,  
 	start_date	varchar(10)	not null  
 );  
-```  
   
 ### system_user  
   
@@ -133,13 +131,11 @@ Functional Dependencies: tck_no -> password
 Candidate Keys: {(tck_no)}  
 Normal Form: BCNF  
 Table Definition:  
-```sql  
 create table system_user (  
 	tck_no		char(8)		primary key,  
 	password	varchar(20)	not null,  
 	foreign key (tck_no) references staff  
 );  
-```  
   
 ### manager  
   
@@ -522,7 +518,7 @@ Table Definition:
    
   
 # Functional Dependencies and Normalization of Tables  
-  
+
 All functional dependencies are shown in section 2.2. Detailed Schemas. All the relations are already in BCNF form. There is no   need for decomposition.   
   
   
@@ -622,6 +618,8 @@ SQL Statements:
 	WHERE tck_no = @tck_no  
 	  AND password=@password  
   
+
+
 ## Bus Rental  
   
 Input: @end_time, @price, @rented_from  
@@ -649,6 +647,7 @@ SQL Statements:
 	       @rented_from)  
   
   
+
 ## Manager Dashboard  
   
 Input: -  
@@ -712,6 +711,7 @@ List rentals:
 	  AND r.start_time = rented_by.start_time rented_by.tck_no = c.tck_no  
   
   
+
 ## List Voyages:  
   
 Input: @dep_city, @arr_city, @dep_time  
@@ -743,6 +743,7 @@ SQL Statements:
 	  AND v.departure_time = @dep_time  
   
   
+
 ## List Reservations  
   
 Input: @time  
@@ -783,6 +784,7 @@ Cancel:
 	  AND seat=@seat  
   
   
+
 ## Create Ticket  
   
 Input: @tck_no,@plate,@route_id, @departure_time, @seat, @payment_type, @price, @name, @surname, @dateofbirth, @gender  
@@ -806,6 +808,7 @@ INSERT INTO customer(@tck_no, @name, @surname, @dateofbirth, @gender)
 *customer table are protected from having duplicates by a trigger  
   
   
+
 ## Make Reservation  
   
 Input: @tck_no,@plate,@route_id, @departure_time, @seat, @payment_type, @price, @name, @surname, @dateofbirth, @gender  
@@ -828,6 +831,7 @@ INSERT INTO customer(@tck_no, @name, @surname, @dateofbirth, @gender)
 *customer table are protected from having duplicates by a trigger  
   
   
+
 ## Edit Bus  
   
 Input: @plate, @type, @is_operational  
@@ -843,6 +847,7 @@ SQL Statements:
 	WHERE plate=@plate  
   
   
+
 ## Edit/Remove Bus Type  
   
 Input: @model,@brand, @layout,@storage_capacity, @passanger_capacity,@height, @width,@length,@year  
@@ -883,6 +888,7 @@ SQL Statements:
 		    year=@year  
   
   
+
 ## Terminal Agent Dashboard  
   
 Input: @time, @plate, @departure_time, @arrival_time  
@@ -899,6 +905,7 @@ SQL Statements:
 	  AND departure_time=@departure_time  
   
   
+
 ## Customer Dashboard  
   
 Input: @departure_city, @arrival_city, @departure_date  
