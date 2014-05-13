@@ -144,13 +144,11 @@ Functional Dependencies: tck_no -> position
 Candidate Keys: {(tck_no)}  
 Normal Form: BCNF  
 Table Definition:  
-```sql  
 create table manager (  
 	tck_no		char(11)		primary key,  
 	position	varchar(40),  
 	foreign key (tck_no) references staff  
 );  
-```  
   
 ### sales_person  
 Relational Model: sales_person(tck_no, office_city, office_address)  
@@ -942,40 +940,41 @@ SQL Statements:
   
 ## Views  
   
-Note: Only direct user of the database is the front-end application, hence views actually are not needed in this case. But for   educational purposes, we provide views as actors of use-cases are direct users of the database.  
+Note: Only direct user of the database is the front-end application, hence views actually are not needed in this case. But for educational purposes, we provide views as actors of use-cases are direct users of the database.
+
 * Terminal agent updates arrival and departure times of voyages and knows the plate of the bus beforehand. Hence, terminal   agent does not need to have access to other attributes of voyage table.  
-  
-	CREATE VIEW voyage_times AS  
-	SELECT plate,  
-	       departure_time,  
-	       arrival_time  
-	FROM voyage  
+
+		CREATE VIEW voyage_times AS  
+		SELECT plate,  
+		       departure_time,  
+		       arrival_time  
+		FROM voyage  
   
 * Finding phone number of a terminal is an action that a customer can perform. But customer must not have access to capacity   information of the terminal. This view is read-only.  
   
-	CREATE VIEW terminal_phone AS  
-	SELECT city,  
-	       address,  
-	       telephone  
-	FROM terminal  
+		CREATE VIEW terminal_phone AS  
+		SELECT city,  
+		       address,  
+		       telephone  
+		FROM terminal  
   
 * Employees may want to retrieve phone numbers of other employees from the database. For example, a salesperson can query phone   number of a terminal agent, but the salesperson should not be able to see the salary of the terminal agent.  
   
-	CREATE VIEW staff_phone AS  
-	SELECT tck_no,  
-	       name,  
-	       phone  
-	FROM staff  
+		CREATE VIEW staff_phone AS  
+		SELECT tck_no,  
+		       name,  
+		       phone  
+		FROM staff  
   
 * Salesperson can see busses for renting them, but busses that are not operational are not needed. The salesperson does also   not need to see roaming distance and start time of a bus.  
   
-	CREATE VIEW operational_busses AS  
-	SELECT plate,  
-	       brand,  
-	       model,  
-	       year  
-	FROM bus  
-	WHERE is_operational = TRUE  
+		CREATE VIEW operational_busses AS  
+		SELECT plate,  
+		       brand,  
+		       model,  
+		       year  
+		FROM bus  
+		WHERE is_operational = TRUE  
   
   
 ## Stored Procedures  
@@ -991,41 +990,41 @@ Registration and authentication procedures
   
 * Total Salary Bill  
   
-	SELECT sum(salary)  
-	FROM staff  
+		SELECT sum(salary)  
+		FROM staff  
   
 * Usage Rates of Busses (total travel distance over time)  
   
-	SELECT plate,  
-	       roaming_distance/(CURRENT_DATE() - start_date)  
-	FROM bus  
-	ORDER BY roaming_distance/(CURRENT_DATE() - start_date) DESC  
+		SELECT plate,  
+		       roaming_distance/(CURRENT_DATE() - start_date)  
+		FROM bus  
+		ORDER BY roaming_distance/(CURRENT_DATE() - start_date) DESC  
   
 * Passenger Load Factors of Routes  
   
-	SELECT avg(V.occupied_seats / B.capacity)  
-	FROM voyage AS V NATURAL  
-	LEFT OUTER JOIN bus NATURAL  
-	LEFT OUTER JOIN bus_type AS B  
-	WHERE V.route_id = @routeID  
+		SELECT avg(V.occupied_seats / B.capacity)  
+		FROM voyage AS V NATURAL  
+		LEFT OUTER JOIN bus NATURAL  
+		LEFT OUTER JOIN bus_type AS B  
+		WHERE V.route_id = @routeID  
   
 * Customers with their total spendings(traveling) in decreasing order  
   
-	SELECT tck_no,  
-	       sum(price) AS total_spending  
-	FROM customer  
-	NATURAL JOIN ticket  
-	GROUP BY tck_no  
-	ORDER BY total_spending DESC  
+		SELECT tck_no,  
+		       sum(price) AS total_spending  
+		FROM customer  
+		NATURAL JOIN ticket  
+		GROUP BY tck_no  
+		ORDER BY total_spending DESC  
   
 * Customers with their total spendings(renting) in decreasing order  
   
-	SELECT tck_no,  
-	       sum(price) AS total_spending  
-	FROM customer  
-	NATURAL JOIN ticket  
-	GROUP BY tck_no  
-	ORDER BY total_spending DESC  
+		SELECT tck_no,  
+		       sum(price) AS total_spending  
+		FROM customer  
+		NATURAL JOIN ticket  
+		GROUP BY tck_no  
+		ORDER BY total_spending DESC  
   
   
 ## Triggers  
