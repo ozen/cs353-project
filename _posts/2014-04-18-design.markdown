@@ -14,107 +14,107 @@ categories: jekyll update
 
 ## Summary
 
-staff(tck_no, name, salary, phone, home_address, start_date)
-
-systemuser(tck_no, password)
-	FK: tck_no references staff
-
-manager(tck_no, position)
-	FK: tck_no references systemuser
-
-salesperson(tck_no, office_city, office_address)
-	FK: tck_no references systemuser
-	FK: (office_city, office_address) references sales_office(city, address)
-
-terminal_agent(tck_no, terminal_city, terminal_address)
-	FK: tck_no references systemuser
-	FK: (terminal_city, terminal_address) references terminal(city,address)
-
-sales_office(city, address, telephone)
-
-driver(tck_no, license_no)
-	FK: tck_no references staff
-
-rent(plate, start_time, end_time, price, rented_from)
-	FK: plate references bus
-
-rented_driver(tck_no, plate, start_time)
-	FK: tck_no references driver
-	FK: (plate, start_time) references rent
-
-assistant(tck_no, rank)
-	FK: tck_no references staff
-
-rented_assistant(plate, start_time, tck_no) 
-	FK: tck_no references assistant
-	FK: (plate, start_time) references rent
-
-customer(tck_no, name, surname, dateofbirth, gender)
-
-rented_by(tck_no, plate, start_time)
-	FK: tck_no references customer
-	FK: (plate,start_time) references rent
-
-garage(city, address, telephone, capacity)
-
-is_at(city, address, plate)
-	FK: (city, address) references garage
-	FK: plate references bus
-
-bustype(brand, model, year, layout, storage_capacity, passanger_capacity, height, width, length)
-
-bustype_feature(brand, model, year, feature_name)
-	FK: (brand, model, year) references bustype
-
-terminal(city, address, telephone, capacity)
-
-bus(plate, brand, model, year, roaming_distance, start_date, is_operational)
-	FK: (brand, model, year) references bustype
-
-route(id, depart_city, depart_address, arrive_city, arrive_address, estimated_duration, distance, number_of_breaks)
-	FK: (depart_city, depart_address) references terminal(city, address) 
-	FK: (arrive_city, arrive_address) references terminal(city, address)
-
-stopover(city, address, route_id)
-	FK: route_id references route(id)
-	FK: (city, address) references terminal
-
-servicearea(address, start_year)
-
-break(route_id, address, duration)
-	FK: route_id references route(id)
-	FK: address references servicearea
-
-voyage(plate, route_id, departure_time, arrival_time, price, occupied_seats)
-	FK: plate references bus
-	FK: route_id references route(id)
-
-reservation(tck_no, plate, route_id, departure_time, seat, time, price)
-	FK: tck_no references customer
-	FK: (plate,route_id, departure_time) references voyage
-
-associated_driver(tck_no, plate, route_id, departure_time)
-	FK: tck_no references driver
-	FK: (plate,route_id, departure_time) references voyage
-
-associated_assistant(tck_no, plate, route_id, departure_time)
-	FK: tck_no references assistant
-	FK: (plate,route_id, departure_time) references voyage
-
-ticket(tck_no, plate, route_id, departure_time, seat, payment_type, payment_time, price)
-	FK: tck_no references customer
-	FK: (plate,route_id, departure_time) references voyage
-
+staff(tck_no, name, salary, phone, home_address, start_date)  
+  
+systemuser(tck_no, password)  
+	FK: tck_no references staff  
+  
+manager(tck_no, position)  
+	FK: tck_no references systemuser  
+  
+salesperson(tck_no, office_city, office_address)  
+	FK: tck_no references systemuser  
+	FK: (office_city, office_address) references sales_office(city, address)  
+  
+terminal_agent(tck_no, terminal_city, terminal_address)  
+	FK: tck_no references systemuser  
+	FK: (terminal_city, terminal_address) references terminal(city,address)  
+  
+sales_office(city, address, telephone)  
+  
+driver(tck_no, license_no)  
+	FK: tck_no references staff  
+  
+rent(plate, start_time, end_time, price, rented_from)  
+	FK: plate references bus  
+  
+rented_driver(tck_no, plate, start_time)  
+	FK: tck_no references driver  
+	FK: (plate, start_time) references rent  
+  
+assistant(tck_no, rank)  
+	FK: tck_no references staff  
+  
+rented_assistant(plate, start_time, tck_no)  
+	FK: tck_no references assistant  
+	FK: (plate, start_time) references rent  
+  
+customer(tck_no, name, surname, dateofbirth, gender)  
+  
+rented_by(tck_no, plate, start_time)  
+	FK: tck_no references customer  
+	FK: (plate,start_time) references rent  
+  
+garage(city, address, telephone, capacity)  
+  
+is_at(city, address, plate)  
+	FK: (city, address) references garage  
+	FK: plate references bus  
+  
+bustype(brand, model, year, layout, storage_capacity, passanger_capacity, height, width, length)  
+  
+bustype_feature(brand, model, year, feature_name)  
+	FK: (brand, model, year) references bustype  
+  
+terminal(city, address, telephone, capacity)  
+  
+bus(plate, brand, model, year, roaming_distance, start_date, is_operational)  
+	FK: (brand, model, year) references bustype  
+  
+route(id, depart_city, depart_address, arrive_city, arrive_address, estimated_duration, distance, number_of_breaks)  
+	FK: (depart_city, depart_address) references terminal(city, address)  
+	FK: (arrive_city, arrive_address) references terminal(city, address)  
+  
+stopover(city, address, route_id)  
+	FK: route_id references route(id)  
+	FK: (city, address) references terminal  
+  
+servicearea(address, start_year)  
+  
+break(route_id, address, duration)  
+	FK: route_id references route(id)  
+	FK: address references servicearea  
+  
+voyage(plate, route_id, departure_time, arrival_time, price, occupied_seats)  
+	FK: plate references bus  
+	FK: route_id references route(id)  
+  
+reservation(tck_no, plate, route_id, departure_time, seat, time, price)  
+	FK: tck_no references customer  
+	FK: (plate,route_id, departure_time) references voyage  
+  
+associated_driver(tck_no, plate, route_id, departure_time)  
+	FK: tck_no references driver  
+	FK: (plate,route_id, departure_time) references voyage  
+  
+associated_assistant(tck_no, plate, route_id, departure_time)  
+	FK: tck_no references assistant  
+	FK: (plate,route_id, departure_time) references voyage  
+  
+ticket(tck_no, plate, route_id, departure_time, seat, payment_type, payment_time, price)  
+	FK: tck_no references customer  
+	FK: (plate,route_id, departure_time) references voyage  
+  
 
 ## Detailed Schemas
 
 ### staff
 
-Relational Model: staff(tck_no, name, salary, phone, home_address, start_date)  
-Functonal Dependencies: tck_no -> name, salary, phone, home_address, start_date  
-Candidate Keys: {(tck_no)}  
-Normal Form: BCNF  
-Table Definition:  
+Relational Model: staff(tck_no, name, salary, phone, home_address, start_date)
+Functonal Dependencies: tck_no -> name, salary, phone, home_address, start_date
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition:
 ```sql
 create table staff (
 	tck_no 	char(8)		primary key,
@@ -128,11 +128,11 @@ create table staff (
 
 ### system_user
 
-Relational Model: system_user(tck_no, password)  
-Functional Dependencies: tck_no -> password  
-Candidate Keys: {(tck_no)}  
-Normal Form: BCNF  
-Table Definition:  
+Relational Model: system_user(tck_no, password)
+Functional Dependencies: tck_no -> password
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition:
 ```sql
 create table system_user (
 	tck_no		char(8)		primary key,
@@ -143,12 +143,12 @@ create table system_user (
 
 ### manager
 
-Relational Model: manager(tck_no, position) 
-Functional Dependencies: tck_no -> position  
-Candidate Keys: {(tck_no)}  
-Normal Form: BCNF  
-Table Definition: 
-```sql 
+Relational Model: manager(tck_no, position)
+Functional Dependencies: tck_no -> position
+Candidate Keys: {(tck_no)}
+Normal Form: BCNF
+Table Definition:
+```sql
 create table manager (
 	tck_no		char(11)		primary key,
 	position	varchar(40),
@@ -156,12 +156,12 @@ create table manager (
 );
 ```
 
-sales_person
+### sales_person
 Relational Model: sales_person(tck_no, office_city, office_address)
 Functional Dependencies: tck_no -> office_city, office_address
 Candidate Keys: {(tck_no)}
 Normal Form: BCNF
-Table Definition: 
+Table Definition:
 	create table salesperson (
 		tck_no		char(11)		primary key,
 		office_city	varchar(20)		not null,
@@ -170,7 +170,7 @@ Table Definition:
 		foreign key (office_city, office_address) references sales_office
 	);
 
-terminal_agent
+### terminal_agent
 Relational Model: terminal_agent(tck_no, terminal_city, terminal_address)
 Functional Dependencies: tck_no -> terminal_city, terminal_address
 Candidate Keys: {(tck_no)}
@@ -184,7 +184,7 @@ Table Definition:
 		foreign key (office_city, office_address) references sales_office
 	);
 
-sales_office
+### sales_office
 Relational Model: sales_office(city, address, phone)
 Functional Dependencies: city, address -> phone
 Candidate Keys: {(city, address)}
@@ -196,7 +196,7 @@ Table Definition:
 		phone		varchar(15)		not null
 	);
 
-driver
+### driver
 Relational Model: driver(tck_no, license_no)
 Functional Dependencies: tck_no -> license_no
 Candidate Keys: {(tck_no)}
@@ -208,7 +208,7 @@ Table Definition:
 		foreign key (tck_no) references staff,
 	);
 
-rent
+### rent
 Relational Model: rent(plate, start_time, end_time, price, rented_from)
 Functional Dependencies: plate, start_time -> end_time, price, rented_from
 Candidate Keys: {(plate, start_time)}
@@ -223,9 +223,9 @@ Table Definition:
 		foreign key (plate) references bus
 	);
 
-rented_driver
+### rented_driver
 Relational Model: rented_driver(tck_no, plate, start_time)
-Functional Dependencies: 
+Functional Dependencies:
 Candidate Keys: {(tck_no, plate, start_time)}
 Normal Form: BCNF
 Table Definition:
@@ -237,7 +237,7 @@ Table Definition:
 		foreign key (plate, start_time) references rent
 	);
 
-assistant
+### assistant
 Relational Model: assistant(tck_no, rank)
 Functional Dependencies: tck_no -> rank
 Candidate Keys: {(tck_no)}
@@ -249,8 +249,8 @@ Table Definition:
 		foreign key (tck_no) references staff
 	);
 
-rented_assistant
-Relational Model: rented_assistant(plate, start_time, tck_no) 
+### rented_assistant
+Relational Model: rented_assistant(plate, start_time, tck_no)
 Functional Dependencies: -
 Candidate Keys: {(plate, start_time, tck_no)}
 Normal Form: BCNF
@@ -263,7 +263,7 @@ Table Definition:
 		foreign key (tck_no) references assistant
 	);
 
-customer
+### customer
 Relational Model: customer(tck_no, name, surname, dateofbirth, gender)
 Functional Dependencies: tch_no -> name, surname, dateofbirth, gender
 Candidate Keys: {(tck_no)}
@@ -277,7 +277,7 @@ Table Definition:
 		gender		char(1)
 	);
 
-rented_by
+### rented_by
 Relational Model: rented_by(tck_no, plate, start_time)
 Functional Dependencies: -
 Candidate Keys: {(tck_no, plate, start_time)}
@@ -291,7 +291,7 @@ Table Definition:
 		foreign key (plate) references bus,
 	);
 
-garage
+### garage
 Relational Model: garage(city, address, phone, capacity)
 Functional Dependencies: city, address -> phone, capacity
 Candidate Keys: {(city, address)}
@@ -303,7 +303,7 @@ Table Definition:
 		phone		varchar(15)		not null,
 	);
 
-is_at
+### is_at
 Relational Model: is_at(city, address, plate)
 Functional Dependencies: -
 Candidate Keys: {(city, address, plate)}
@@ -317,7 +317,7 @@ Table Definition:
 		foreign key (plate) references bus
 	);
 
-bus_type
+### bus_type
 Relational Model: bustype(brand, model, year, layout, passenger_capacity, storage_capacity, height, width, length)
 Functional Dependencies: brand, model, year -> layout, passenger_capacity, storage_capacity, height, width, length
 Candidate Keys: {(brand, model, year)}
@@ -335,7 +335,7 @@ Table Definition:
 		length			numeric(2,1)
 	);
 
-bustype_feature
+### bustype_feature
 Relational Model: bustype_feature(brand, model, year, feature_name)
 Functional Dependencies: -
 Candidate Keys: {(brand, model, year, feature_name)}
@@ -347,9 +347,9 @@ Table Definition:
 		year			char(4)			primary key,
 		feature_name		varchar(30)		primary key,
 		foreign key (brand, model, year) references bust_type,
-	);	
+	);
 
-terminal
+### terminal
 Relational Model: terminal(city, address, phone, capacity)
 Functional Dependencies: city, address -> phone, capacity
 Candidate Keys: {(city, address)}
@@ -362,7 +362,7 @@ Table Definition:
 		capacity		smallint		not null
 	);
 
-bus
+### bus
 Relational Model: bus(plate, brand, model, year, roaming_distance, start_date, is_operational)
 Functional Dependencies: plate -> brand, model, year, raoming_distance, start_date, is_operational
 Candidate Keys: {(plate)}
@@ -379,7 +379,7 @@ Table Definition:
 		foreign key (brand, model, year) references bust_type
 	);
 
-route
+### route
 Relational Model: route(route_id, depart_city, depart_address, arrive_city, arrive_address, 				estimated_duration, distance, number_of_breaks)
 Functional Dependencies: route_id -> depart_city, depart_address, arrive_city, arrive_address, estimated_duration, distance, number_of_breaks)
 Candidate Keys: {(route_id)}
@@ -398,7 +398,7 @@ Table Definition:
 		foreign key (arrive_city, arrive_address) references terminal
 	);
 
-stopover
+### stopover
 Relational Model: stopover(city, address, route_id)
 Functional Dependencies: -
 Candidate Keys: {(city, address, route_id)}
@@ -412,7 +412,7 @@ Table Definition:
 		foreign key (city, address) references terminal
 	);
 
-service_area
+### service_area
 Relational Model: servicearea(address)
 Functional Dependencies: -
 Candidate Keys: {(address)}
@@ -422,7 +422,7 @@ Table Definition:
 		address		varchar(100)		primary key
 	);
 
-break
+### break
 Relational Model: break(route_id, address, duration)
 Functional Dependencies: route_id, address -> duration
 Candidate Keys: {(route_id, address)}
@@ -436,7 +436,7 @@ Table Definition:
 		foreign key (address) references servise_area
 	);
 
-voyage
+### voyage
 Relational Model: voyage(plate, route_id, departure_time, arrival_time, price, occupied_seats)
 Functional Dependencies: plate, route_id, departure_time -> arrival_time, price
 Candidate Keys: {(plate, route_id, departure_time)}
@@ -453,12 +453,12 @@ Table Definition:
 		foreign key (route_id) references route
 	);
 
-reservation
+### reservation
 Relational Model: reservation(tck_no, plate, route_id, departure_time, seat, time, price)
 Functional Dependencies: tck_no, plate, route_id, seat -> time, price
 Candidate Keys: {(tck_no, plate, route_id, seat)}
 Normal Form: BCNF
-Table Definition: 
+Table Definition:
 	create table reservation (
 		tck_no			char(11)		primary key,
 		plate			varchar(10)		primary key,
@@ -471,7 +471,7 @@ Table Definition:
 		foreign key (plate,route_id, departure_time) references voyage
 	);
 
-associated_driver
+### associated_driver
 Relational Model: associated_driver(tck_no, plate, route_id, departure_time)
 Functional Dependencies: -
 Candidate Keys: {(tck_no, plate, route_id, departure_time
@@ -486,7 +486,7 @@ Table Definition:
 		foreign key (plate,route_id, departure_time) references voyage
 	);
 
-associated_assistant
+### associated_assistant
 Relational Model: associated_assistant(tck_no, plate, route_id, departure_time)
 Functional Dependencies: -
 Candidate Keys: {(tck_no, plate, route_id, departure_time)}
@@ -501,7 +501,7 @@ Table Definition:
 		foreign key (plate,route_id, departure_time) references voyage
 	);
 
-ticket
+### ticket
 Relational Model: ticket(tck_no, plate, route_id, departure_time, seat, payment_type,payment_time, price)
 Functional Dependencies: tck_no, plate, route_id, departure_time, seat -> payment_type, payment_time, price
 Candidate Keys: {(tck_no, plate, route_id, departure_time, seat)}
@@ -582,7 +582,7 @@ Manager can create voyages using existing busses and routes. The input form for 
 
 ### Making Reservation
 
-Salesperson (in sales-office) and customer (on the internet) can make reservations for voyages. Voyage and seat options are displayed in the reservation form. User cannot make reservation for a sold or reserved seat. 
+Salesperson (in sales-office) and customer (on the internet) can make reservations for voyages. Voyage and seat options are displayed in the reservation form. User cannot make reservation for a sold or reserved seat.
 
 ### Purchasing/Selling Ticket
 
@@ -664,7 +664,7 @@ List voyages:
 	WHERE v.plate=b.plate
 	  AND v.route_id = r.id
 	ORDER BY v.departure_time
-	
+
 List buses:
 
 	SELECT b.plate,
@@ -967,7 +967,7 @@ Registration and authentication procedures
 	SELECT sum(salary)
 	FROM staff
 
-* Usage Rates of Busses (total travel distance over time) 
+* Usage Rates of Busses (total travel distance over time)
 
 	SELECT plate,
 	       roaming_distance/(CURRENT_DATE() - start_date)
