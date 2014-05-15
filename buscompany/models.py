@@ -152,4 +152,78 @@ class IsAt(models.Model):
 		db_table = 'IsAt'
 		unique_together = (('garage_id','plate'),)
 
+class Route(models.Model):
+	route_id = models.CharField(max_length='12',primary_key=True,db_column='route_id')
+	depart_terminal = models.ForeignKey(Terminal,db_column='depart_terminal',related_name='+')#related_name is to prevent back pointer from terminal to route
+	arrive_terminal = models.ForeignKey(Terminal,db_column='arrive_terminal',related_name='+')
+	estimated_duration = models.IntegerField(null=True)
+	distance = models.IntegerField()
+	number_of_breaks = models.IntegerField(default=0)
+	class Meta:
+		db_table = 'Route'
 
+class Stopover(models.Model):
+	terminal_id = models.ForeignKey(Terminal,db_column='terminal_id')
+	route_id = models.ForeignKey(Route,db_column='route_id')
+	class Meta:
+		db_table = 'Stopover'
+		unique_together = (('terminal_id','route_id'),)
+
+class ServiceArea(models.Model):
+	address = models.CharField(max_length=100,primary_key=True,db_column='address')
+	class Meta:
+		db_table = 'ServiceArea'
+
+class Break(models.Model):
+	route_id = models.ForeignKey(Route,db_column='route_id')
+	address = models.ForeignKey(ServiceArea,db_column='address')
+	duration = models.IntegerField()
+	class Meta:
+		db_table = 'Break'
+		unique_together = (('route_id','address'),)
+
+class Voyage(models.Model):
+	plate = models.ForeignKey(Bus,db_column='plate')
+	route_id = models.ForeignKey(Route,db_column='route_id')
+	departure_time = models.DateTimeField()
+	arrival_time = models.DateTimeField(null=True)
+	price = models.DecimalField(max_digits=5,decimal_places=2)
+	occupied_seats = models.IntegerField(default=0)
+	class Meta:
+		db_table = 'Voyage'
+		unique_together = (('plate','route_id','departure_time'),)
+
+class Reservation(models.Model):
+	tck_no = models.ForeignKey(Customer,db_column='tck_no')
+	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id')
+	seat = models.CharField(max_length=3)
+	time = models.TimeField()
+	price = models.DecimalField(max_digits=5,decimal_places=2)
+	class Meta:
+		db_table = 'Reservation'
+		unique_together = (('tck_no','voyage_id','seat'),)
+
+class AssociatedDriver(models.Model):
+	tck_no = models.ForeignKey(Customer,db_column='tck_no')
+	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id')
+	class Meta:
+		db_table = 'AssociatedDriver'
+		unique_together = (('tck_no','voyage_id'),)
+
+class AssociatedAssistant(models.Model):
+	tck_no = models.ForeignKey(Customer,db_column='tck_no')
+	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id')
+	class Meta:
+		db_table = 'AssociatedAssistant'
+		unique_together = (('tck_no','voyage_id'),)
+
+class Ticket(models.Model):
+	tck_no = models.ForeignKey(Customer,db_column='tck_no')
+	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id')
+	seat = models.CharField(max_length=3)
+	payment_type = models.CharField(max_length=5)
+	payment_time = models.DateTimeField()
+	price = models.DecimalField(max_digits=5,decimal_places=2)
+	class Meta:
+		db_table = 'Ticket'
+		unique_together = (('tck_no','voyage_id','seat'),)
