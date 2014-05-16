@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 
 class Staff(models.Model):
 	tck_no = models.CharField(max_length=11,primary_key=True)
-	name = models.CharField(max_length=50)
-	salary = models.DecimalField(max_digits=7, decimal_places=2)
+	name = models.CharField(max_length=50,db_index=True)
+	salary = models.DecimalField(max_digits=7, decimal_places=2,db_index=False)
 	phone = models.CharField(max_length=18)
 	home_address = models.CharField(max_length=100)
 	start_date = models.CharField(max_length=10)
@@ -24,7 +24,7 @@ class Manager(models.Model):
 		db_table = 'Manager'
 
 class SalesOffice(models.Model):
-	city = models.CharField(max_length=20)
+	city = models.CharField(max_length=20,db_index=True)
 	address = models.CharField(max_length=100)
 	phone = models.CharField(max_length=18)
 	class Meta:
@@ -33,7 +33,7 @@ class SalesOffice(models.Model):
 
 class Salesperson(models.Model):
 	tck_no = models.ForeignKey(SystemUser,primary_key=True,db_column='tck_no')
-	office_id = models.ForeignKey(SalesOffice,db_column='office_id')
+	office_id = models.ForeignKey(SalesOffice,db_column='office_id',db_index=True)
 	tickets_sold = models.PositiveIntegerField()
 	class Meta:
 		db_table = 'Salesperson'
@@ -82,16 +82,16 @@ class BusTypeFeature(models.Model):
 
 class Bus(models.Model):
 	plate = models.CharField(max_length=10)
-	bustype_id = models.ForeignKey(BusType,db_column='bustype_id')
+	bustype_id = models.ForeignKey(BusType,db_column='bustype_id',db_index=False)
 	roaming_distance = models.IntegerField(default=0)
 	start_date = models.DateField()
-	is_operational = models.CharField(max_length=1)
+	is_operational = models.CharField(max_length=1,db_index=True)
 	class Meta:
 		db_table = 'Bus'
 		unique_together = (('plate','bustype_id'),)
 
 class Rent(models.Model):
-	plate = models.ForeignKey(Bus,db_column='plate')
+	plate = models.ForeignKey(Bus,db_column='plate',db_index=False)
 	start_time = models.DateField(auto_now_add=True) #raporda varchar(10) olarak gozukuyor
 	end_time = models.DateField(null=True) #raporda varchar(10) olarak gorunuyor
 	price = models.DecimalField(max_digits=6,decimal_places=2)
@@ -101,8 +101,8 @@ class Rent(models.Model):
 		unique_together = (('plate','start_time'),)
 
 class RentedDriver(models.Model):
-	tck_no = models.ForeignKey(Driver,db_column='tck_no')
-	rent_id = models.ForeignKey(Rent,db_column='rent_id')
+	tck_no = models.ForeignKey(Driver,db_column='tck_no',db_index=False)
+	rent_id = models.ForeignKey(Rent,db_column='rent_id',db_index=True)
 	class Meta:
 		db_table = 'RentedDriver'
 		unique_together = (('tck_no','rent_id'),)
@@ -114,8 +114,8 @@ class Assistant(models.Model):
 		db_table = 'Assistant'
 
 class RentedAssistant(models.Model):
-	tck_no = models.ForeignKey(Assistant,db_column='tck_no')
-	rent_id = models.ForeignKey(Rent,db_column='rent_id')
+	tck_no = models.ForeignKey(Assistant,db_column='tck_no',db_index=False)
+	rent_id = models.ForeignKey(Rent,db_column='rent_id',db_index=True)
 	class Meta:
 		db_table = 'RentedAssistant'
 		unique_together = (('tck_no','rent_id'),)
@@ -130,8 +130,8 @@ class Customer(models.Model):
 		db_table = 'Customer'
 
 class RentedBy(models.Model):
-	tck_no = models.ForeignKey(Customer,db_column='tck_no')
-	plate = models.ForeignKey(Bus,db_column='plate')
+	tck_no = models.ForeignKey(Customer,db_column='tck_no',db_index=False)
+	plate = models.ForeignKey(Bus,db_column='plate',db_index=True)
 	start_time = models.DateField(auto_now_add=True)
 	class Meta:
 		db_table = 'RentedBy'
@@ -146,8 +146,8 @@ class Garage(models.Model):
 		unique_together = (('city','address'),)
 
 class IsAt(models.Model):
-	garage_id = models.ForeignKey(Garage,db_column='garage_id')
-	plate = models.ForeignKey(Bus,db_column='plate')
+	garage_id = models.ForeignKey(Garage,db_column='garage_id',db_index=False)
+	plate = models.ForeignKey(Bus,db_column='plate',db_index=True)
 	class Meta:
 		db_table = 'IsAt'
 		unique_together = (('garage_id','plate'),)
@@ -163,8 +163,8 @@ class Route(models.Model):
 		db_table = 'Route'
 
 class Stopover(models.Model):
-	terminal_id = models.ForeignKey(Terminal,db_column='terminal_id')
-	route_id = models.ForeignKey(Route,db_column='route_id')
+	terminal_id = models.ForeignKey(Terminal,db_column='terminal_id',db_index=False)
+	route_id = models.ForeignKey(Route,db_column='route_id',db_index=True)
 	class Meta:
 		db_table = 'Stopover'
 		unique_together = (('terminal_id','route_id'),)
@@ -175,17 +175,17 @@ class ServiceArea(models.Model):
 		db_table = 'ServiceArea'
 
 class Break(models.Model):
-	route_id = models.ForeignKey(Route,db_column='route_id')
-	address = models.ForeignKey(ServiceArea,db_column='address')
-	duration = models.IntegerField()
+	route_id = models.ForeignKey(Route,db_column='route_id',db_index=True)
+	address = models.ForeignKey(ServiceArea,db_column='address',db_index=False)
+	duration = models.IntegerField(db_index=False)
 	class Meta:
 		db_table = 'Break'
 		unique_together = (('route_id','address'),)
 
 class Voyage(models.Model):
-	plate = models.ForeignKey(Bus,db_column='plate')
+	plate = models.ForeignKey(Bus,db_column='plate',db_index=False)
 	route_id = models.ForeignKey(Route,db_column='route_id')
-	departure_time = models.DateTimeField()
+	departure_time = models.DateTimeField(db_index=True)
 	arrival_time = models.DateTimeField(null=True)
 	price = models.DecimalField(max_digits=5,decimal_places=2)
 	occupied_seats = models.IntegerField(default=0)
@@ -194,8 +194,8 @@ class Voyage(models.Model):
 		unique_together = (('plate','route_id','departure_time'),)
 
 class Reservation(models.Model):
-	tck_no = models.ForeignKey(Customer,db_column='tck_no')
-	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id')
+	tck_no = models.ForeignKey(Customer,db_column='tck_no',db_index=False)
+	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id',db_index=True)
 	seat = models.CharField(max_length=3)
 	time = models.TimeField()
 	price = models.DecimalField(max_digits=5,decimal_places=2)
@@ -204,22 +204,22 @@ class Reservation(models.Model):
 		unique_together = (('tck_no','voyage_id','seat'),)
 
 class AssociatedDriver(models.Model):
-	tck_no = models.ForeignKey(Customer,db_column='tck_no')
-	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id')
+	tck_no = models.ForeignKey(Customer,db_column='tck_no',db_index=False)
+	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id',db_index=True)
 	class Meta:
 		db_table = 'AssociatedDriver'
 		unique_together = (('tck_no','voyage_id'),)
 
 class AssociatedAssistant(models.Model):
-	tck_no = models.ForeignKey(Customer,db_column='tck_no')
-	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id')
+	tck_no = models.ForeignKey(Customer,db_column='tck_no',db_index=False)
+	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id',db_index=True)
 	class Meta:
 		db_table = 'AssociatedAssistant'
 		unique_together = (('tck_no','voyage_id'),)
 
 class Ticket(models.Model):
-	tck_no = models.ForeignKey(Customer,db_column='tck_no')
-	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id')
+	tck_no = models.ForeignKey(Customer,db_column='tck_no',db_index=False)
+	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id',db_index=True)
 	seat = models.CharField(max_length=3)
 	payment_type = models.CharField(max_length=5)
 	payment_time = models.DateTimeField()
