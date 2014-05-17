@@ -1,1 +1,43 @@
-{{ id }}
+{% extends "main.html" %}
+
+{% block title %}List Voyages{% endblock %}
+
+{% block navbar %}
+{% include "common-navbar.html" %}
+{% endblock %}
+
+
+{% block content %}
+<form action="/listVoyages/" method="post">{%csrf_token%}
+	{{ lookupForm.as_p }}
+	<input type="submit" value="Search" />
+</form>
+<table class="table table-condensed table-striped table-hover">
+	<thead>
+		<tr>
+			<td>Departure</td>
+			<td>Arrival</td>
+			<td>Bus</td>
+			<td>Seats</td>
+			<td>Operation</td>
+		</tr>
+	</thead>
+	<tbody>
+		{% for row in rows %}
+		<tr>
+			<td>{{ row.0 }}
+			</td>
+			<td>{{ row.1 }}
+			</td>
+			<td>{{ row.2 }}
+			</td>
+			<td>{{ row.3 }}
+			</td>
+			<td>dummy
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+
+</table>
+{% endblock %}

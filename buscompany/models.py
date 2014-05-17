@@ -81,7 +81,7 @@ class BusTypeFeature(models.Model):
 		unique_together = (('bustype_id','feature_name'),)
 
 class Bus(models.Model):
-	plate = models.CharField(max_length=10)
+	plate = models.CharField(max_length=10,primary_key=True)
 	bustype_id = models.ForeignKey(BusType,db_column='bustype_id',db_index=False)
 	roaming_distance = models.IntegerField(default=0)
 	start_date = models.DateField()
