@@ -31,5 +31,5 @@ def listVoyages(request):
 				rows=cursor.fetchall()
 	else:
 		form = VoyageLookupForm()
-	return render(request,'list_voyages.html',{'lookupForm':form,'rows':rows})
+	return render(request,'common/list_voyages.html',{'lookupForm':form,'rows':rows})
 
