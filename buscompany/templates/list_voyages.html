@@ -1,11 +1,6 @@
-{% extends "main.html" %}
+{% extends "salesperson.html" %}
 
 {% block title %}List Voyages{% endblock %}
-
-{% block navbar %}
-{% include "common-navbar.html" %}
-{% endblock %}
-
 
 {% block content %}
 <form action="/listVoyages/" method="post">{%csrf_token%}
