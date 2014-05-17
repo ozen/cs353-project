@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Staff(models.Model):
 	tck_no = models.CharField(max_length=11,primary_key=True)
-	name = models.CharField(max_length=50,db_index=True)
+	name = models.CharField(max_length=50,db_index=False)
 	salary = models.DecimalField(max_digits=7, decimal_places=2,db_index=False)
 	phone = models.CharField(max_length=18)
 	home_address = models.CharField(max_length=100)
@@ -24,7 +24,7 @@ class Manager(models.Model):
 		db_table = 'Manager'
 
 class SalesOffice(models.Model):
-	city = models.CharField(max_length=20,db_index=True)
+	city = models.CharField(max_length=20)
 	address = models.CharField(max_length=100)
 	phone = models.CharField(max_length=18)
 	class Meta:
@@ -49,7 +49,7 @@ class Terminal(models.Model):
 
 class TerminalAgent(models.Model):
 	tck_no = models.ForeignKey(SystemUser,primary_key=True,db_column='tck_no')
-	terminal_id = models.ForeignKey(Terminal,db_column='terminal_id')
+	terminal_id = models.ForeignKey(Terminal,db_column='terminal_id',db_index=False)
 	class Meta:
 		db_table = 'TerminalAgent'
 
@@ -74,7 +74,7 @@ class BusType(models.Model):
 		unique_together = (('brand','model','year'),)
 
 class BusTypeFeature(models.Model):
-	bustype_id = models.ForeignKey(BusType,db_column='bustype_id')
+	bustype_id = models.ForeignKey(BusType,db_column='bustype_id',db_index=False)
 	feature_name = models.CharField(max_length=30)
 	class Meta:
 		db_table = 'BusTypeFeature'
@@ -102,7 +102,7 @@ class Rent(models.Model):
 
 class RentedDriver(models.Model):
 	tck_no = models.ForeignKey(Driver,db_column='tck_no',db_index=False)
-	rent_id = models.ForeignKey(Rent,db_column='rent_id',db_index=True)
+	rent_id = models.ForeignKey(Rent,db_column='rent_id',db_index=False)
 	class Meta:
 		db_table = 'RentedDriver'
 		unique_together = (('tck_no','rent_id'),)
@@ -115,7 +115,7 @@ class Assistant(models.Model):
 
 class RentedAssistant(models.Model):
 	tck_no = models.ForeignKey(Assistant,db_column='tck_no',db_index=False)
-	rent_id = models.ForeignKey(Rent,db_column='rent_id',db_index=True)
+	rent_id = models.ForeignKey(Rent,db_column='rent_id',db_index=False)
 	class Meta:
 		db_table = 'RentedAssistant'
 		unique_together = (('tck_no','rent_id'),)
@@ -131,7 +131,7 @@ class Customer(models.Model):
 
 class RentedBy(models.Model):
 	tck_no = models.ForeignKey(Customer,db_column='tck_no',db_index=False)
-	plate = models.ForeignKey(Bus,db_column='plate',db_index=True)
+	plate = models.ForeignKey(Bus,db_column='plate',db_index=False)
 	start_time = models.DateField(auto_now_add=True)
 	class Meta:
 		db_table = 'RentedBy'
@@ -153,7 +153,7 @@ class IsAt(models.Model):
 		unique_together = (('garage_id','plate'),)
 
 class Route(models.Model):
-	route_id = models.CharField(max_length='12',primary_key=True,db_column='route_id')
+	route_id = models.IntegerField(primary_key=True,db_column='route_id')
 	depart_terminal = models.ForeignKey(Terminal,db_column='depart_terminal',related_name='+')#related_name is to prevent back pointer from terminal to route
 	arrive_terminal = models.ForeignKey(Terminal,db_column='arrive_terminal',related_name='+')
 	estimated_duration = models.IntegerField(null=True)
