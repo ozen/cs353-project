@@ -23,8 +23,8 @@
             <td>{{ route.distance }}</td>
             <td>{{ route.number_of_breaks }}</td>
             <td>
-                <a class="btn btn-default" href="/manager/editBus/{{ route.route_id }}/">Edit</a>
-                <a class="btn btn-default" href="/manager/deleteBus/{{ route.route_id }}/">Delete</a>
+                <a class="btn btn-default" href="/manager/addRoute/{{ route.pk }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteRoute/{{ route.pk }}/">Delete</a>
             </td>
         </tr>
         {% endfor %}

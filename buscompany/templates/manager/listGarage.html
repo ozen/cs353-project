@@ -21,8 +21,8 @@
             <td>{{ garage.phone }}</td>
             <td>{{ garage.buscount }}</td>
             <td>
-                <a class="btn btn-default" href="/manager/editBus/{{ garage.garage_id }}/">Edit</a>
-                <a class="btn btn-default" href="/manager/deleteBus/{{ garage.garage_id }}/">Delete</a>
+                <a class="btn btn-default" href="/manager/addGarage/{{ garage.pk }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteGarage/{{ garage.pk }}/">Delete</a>
             </td>
         </tr>
         {% endfor %}

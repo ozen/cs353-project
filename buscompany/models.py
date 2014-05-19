@@ -42,6 +42,8 @@ class Terminal(models.Model):
 	class Meta:
 		db_table = 'Terminal'
 		unique_together = (('city','address'),)
+	def __unicode__(self):
+		return u'%s %s' % (self.city, self.address)
 
 class TerminalAgent(models.Model):
 	tck_no = models.ForeignKey(Staff,primary_key=True,db_column='tck_no')
@@ -69,6 +71,8 @@ class BusType(models.Model):
 	class Meta:
 		db_table = 'BusType'
 		unique_together = (('brand','model','year'),)
+	def __unicode__(self):
+		return u'%s %s %s' % (self.brand, self.model, self.year)
 
 class BusTypeFeature(models.Model):
 	bustype_id = models.ForeignKey(BusType,db_column='bustype_id',db_index=False)
@@ -86,6 +90,8 @@ class Bus(models.Model):
 	class Meta:
 		db_table = 'Bus'
 		unique_together = (('plate','bustype_id'),)
+	def __unicode__(self):
+		return u'%s' % (self.plate)
 
 class Rent(models.Model):
 	plate = models.ForeignKey(Bus,db_column='plate',db_index=False)
@@ -158,6 +164,8 @@ class Route(models.Model):
 	number_of_breaks = models.IntegerField(default=0)
 	class Meta:
 		db_table = 'Route'
+	def __unicode__(self):
+		return u'%s - %s (%i)' % (self.depart_terminal.address, self.arrive_terminal.address, self.estimated_duration)
 
 class Stopover(models.Model):
 	terminal_id = models.ForeignKey(Terminal,db_column='terminal_id',db_index=False)

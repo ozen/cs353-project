@@ -1,5 +1,7 @@
 {% extends "common/base.html" %}
 
+{% block brandlink %}/manager/{% endblock %}
+
 {% block navbar %}
 <ul class="nav navbar-nav">
     <li class="dropdown">
@@ -36,6 +38,6 @@
             </li>
         </ul>
     </li>
-    <li><a href="#">Logout</a></li>
+    <li><a href="/">Logout</a></li>
 </ul>
 {% endblock %}

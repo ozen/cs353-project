@@ -25,8 +25,8 @@
             <td>{{ busType.capacity }}</td>
             <td>{{ busType.heigth }} {{ busType.width }} {{ busType.length }}</td>
             <td>
-                <a class="btn btn-default" href="/manager/editBusType/{{ bus.bustype_id }}/">Edit</a>
-                <a class="btn btn-default" href="/manager/deleteBusType/{{ bus.bustype_id }}/">Delete</a>
+                <a class="btn btn-default" href="/manager/addBusType/{{ busType.pk }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteBusType/{{ busType.pk }}/">Delete</a>
             </td>
         </tr>
         {% endfor %}

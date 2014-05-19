@@ -23,8 +23,8 @@
             <td>{{ voyage.price }}</td>
             <td>{{ voyage.occupied_seats }}</td>
             <td>
-                <a class="btn btn-default" href="/manager/editBus/{{ voyage.voyage_id }}/">Edit</a>
-                <a class="btn btn-default" href="/manager/deleteBus/{{ voyage.voyage_id }}/">Delete</a>
+                <a class="btn btn-default" href="/manager/addVoyage/{{ voyage.pk }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteVoyage/{{ voyage.pk }}/">Delete</a>
             </td>
         </tr>
         {% endfor %}
