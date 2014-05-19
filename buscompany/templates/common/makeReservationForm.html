@@ -5,7 +5,7 @@
 {% block content %}
 <form class="form" action="/makeReservation/{{voyage_id}}/" method="post">{%csrf_token%}
 	{{ buyForm.as_p }}
-	<input class="btn btn-default" type="submit" value="Buy" />
+	<input class="btn btn-default" type="submit" value="Make Reservation" />
 </form>
 
 {% endblock %}
