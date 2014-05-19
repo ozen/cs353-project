@@ -15,7 +15,7 @@ def getCityList():
 	for item in cities[0]:
 		citylist.append((item,item,))
 	return citylist
-def listVoyages(request):
+def createListVoyages(request):
 	rows=[]
 	citylist=getCityList()
 	if request.method == 'POST':
@@ -43,6 +43,10 @@ def listVoyages(request):
 		form = VoyageLookupForm()
 		form.fields['departure_city'].choices=citylist
 		form.fields['arrival_city'].choices=citylist
+
+	return form,rows
+def listVoyages(request):
+	form,rows=createListVoyages(request)
 	return render(request,'common/list_voyages.html',{'lookupForm':form,'rows':rows})
 
 def get_unoccupied_seats_list(voyage_id):

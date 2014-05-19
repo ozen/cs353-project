@@ -1,0 +1,22 @@
+{% extends "common/base.html" %}
+
+{% block title %}Ticket Details{% endblock %}
+
+{% block content %}
+<table class="table">
+	<thead>
+		<th>From</th>
+		<th>To</th>
+		<th>When</th>
+		<th>Operation</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{rows.2}}</td>
+			<td>{{rows.3}}</td>
+			<td>{{rows.1}}</td>
+			<td><a class="btn btn-primary btn-block" href="/salesperson/cancelTicket/{{ rows.0 }}/">Cancel</a></td>
+		</tr>
+	</tbody>
+</table>
+{% endblock %}
