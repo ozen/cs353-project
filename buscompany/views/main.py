@@ -23,11 +23,11 @@ def listVoyages(request):
 			route_id = cursor.fetchone()
 			if route_id is not None:
 
-				#date hardcoded in sql statement. FIX THIS!!!
+
 				cursor.execute('''SELECT v.departure_time,v.arrival_time,bt.model,v.occupied_seats,v.id,b.plate FROM Voyage v,Bus b,BusType bt
 								 WHERE v.route_id=%s AND b.plate = v.plate AND bt.id=b.bustype_id
-								 AND v.departure_time >= %s AND v.departure_time< "2014-06-02"''',
-								 [route_id[0],form.cleaned_data['date']])
+								 AND v.departure_time >= %s AND v.departure_time< %s''',
+								 [route_id[0],form.cleaned_data['date'],form.cleaned_data['date']+datetime.timedelta(days=1)])
 
 				rows=cursor.fetchall()
 	else:
