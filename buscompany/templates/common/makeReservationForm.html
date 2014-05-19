@@ -1,0 +1,11 @@
+{% extends "common/base.html" %}
+
+{% block title %}Make Reservation{% endblock %}
+
+{% block content %}
+<form class="form" action="/makeReservation/{{voyage_id}}/" method="post">{%csrf_token%}
+	{{ buyForm.as_p }}
+	<input class="btn btn-default" type="submit" value="Make Reservation" />
+</form>
+
+{% endblock %}
