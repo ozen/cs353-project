@@ -8,7 +8,6 @@ def index(request):
 	return render(request, 'frontpage.html')
 
 
-# an incomplete half-dummy implementation of listVoyages just to see how forms work
 def listVoyages(request):
 	rows=[]
 	if request.method == 'POST':
@@ -34,9 +33,10 @@ def listVoyages(request):
 		form = VoyageLookupForm()
 	return render(request,'common/list_voyages.html',{'lookupForm':form,'rows':rows})
 
-def buyTicket(request,voyage_id):
+def get_unoccupied_seats_list(voyage_id):
 	cursor = connection.cursor()
-	cursor.execute('''SELECT seat FROM Ticket WHERE voyage_id=%s ''',[voyage_id])
+	cursor.execute('''SELECT seat FROM Ticket WHERE voyage_id=%s
+	 UNION SELECT seat FROM Reservation WHERE voyage_id=%s ''',[voyage_id,voyage_id])
 	occupied_seats = cursor.fetchall()
 	if occupied_seats:
 		occupied_seats = map(list, zip(*occupied_seats))[0]#zip(*occupied_seats)
@@ -51,6 +51,12 @@ def buyTicket(request,voyage_id):
 	for i in range(1,passenger_capacity+1):
 		if i not in occupied_seats:
 			unoccupied_seats_list.append((i,i,))
+	return unoccupied_seats_list
+
+
+
+def buyTicket(request,voyage_id):
+	unoccupied_seats_list = get_unoccupied_seats_list(voyage_id)
 
 	if request.method == 'POST':
 
@@ -89,3 +95,42 @@ def buyTicket(request,voyage_id):
 
 	return render(request,'common/buyTicketForm.html',{'voyage_id':voyage_id,'buyForm':form})
 
+def makeReservation(request,voyage_id):
+	unoccupied_seats_list = get_unoccupied_seats_list(voyage_id)
+
+	if request.method == 'POST':
+
+		form = BuyTicketForm(request.POST)
+		form.fields['seat'].choices = unoccupied_seats_list
+
+		if form.is_valid():
+			cursor = connection.cursor()
+			price = 1
+			cursor.execute(''' SELECT * FROM Customer WHERE tck_no = %s''',[request.POST['tck_no']])
+			if not cursor.fetchone():
+				cursor.execute('''INSERT INTO Customer VALUES(%s,%s,%s,%s,%s) ''',[form.cleaned_data['tck_no'],
+					form.cleaned_data['name'],form.cleaned_data['surname'],form.cleaned_data['date_of_birth'],
+					form.cleaned_data['gender']])
+
+				
+			cursor.execute('''SELECT price,plate FROM Voyage WHERE id=%s ''',[voyage_id])
+			row = cursor.fetchone()
+			price = row[0]
+			cursor.execute(''' INSERT INTO Reservation(tck_no,voyage_id,seat,time,price) VALUES(%s,%s,%s,%s,%s)''',[form.cleaned_data['tck_no'],
+				voyage_id,form.cleaned_data['seat'],datetime.datetime.now(),price])
+
+			cursor.execute(''' SELECT t1.city,t2.city,v.departure_time From Route r,Terminal t1,Terminal t2,Voyage v
+							WHERE r.depart_terminal=t1.id AND r.arrive_terminal=t2.id 
+							AND v.id=%s AND v.route_id=r.route_id''',[voyage_id])
+			row = cursor.fetchone()
+			fr = row[0]
+			to = row[1]
+			dtime = row[2]
+			return render(request,'common/reservationDetail.html',{'fr':fr,'to':to,'dtime':dtime,'seat':form.cleaned_data['seat'],'type':'reservation'})
+	else:
+
+		
+		form = BuyTicketForm()
+		form.fields['seat'].choices = unoccupied_seats_list
+
+	return render(request,'common/makeReservationForm.html',{'voyage_id':voyage_id,'buyForm':form,'type':'reservation'})
