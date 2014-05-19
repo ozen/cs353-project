@@ -3,13 +3,25 @@ from buscompany.forms import VoyageLookupForm, TerminalAgentVoyageForm
 from django.http import HttpResponseRedirect
 from django.db import connection
 import datetime
+def getCityList():
+	cursor = connection.cursor()
+	cursor.execute(''' SELECT DISTINCT city FROM Terminal ORDER BY city ''')
+	cities = zip(*(cursor.fetchall()))
+	citylist = []
+	for item in cities[0]:
+		citylist.append((item,item,))
+	return citylist
 def dashboard(request):
 	rows=[]
-	if request.method == 'POST':
+	cursor = connection.cursor()
 
+	if request.method == 'POST':
 		form = VoyageLookupForm(request.POST)
+		citylist = getCityList()
+		form.fields['departure_city'].choices=citylist
+		form.fields['arrival_city'].choices=citylist
 		if form.is_valid():
-			cursor = connection.cursor()
+			
 
 			cursor.execute('''SELECT r.route_id From Route r,Terminal t1,Terminal t2
 							WHERE r.depart_terminal=t1.id AND t1.city=%s AND r.arrive_terminal=t2.id AND t2.city=%s''',
@@ -27,6 +39,11 @@ def dashboard(request):
 				rows=cursor.fetchall()
 	else:
 		form = VoyageLookupForm()
+		citylist = getCityList()
+		form.fields['departure_city'].choices=citylist
+		form.fields['arrival_city'].choices=citylist
+
+	
 	return render(request,'terminal_agent/dashboard.html',{'lookupForm':form,'rows':rows})
 
 def editVoyage(request,voyage_id):
@@ -43,6 +60,4 @@ def editVoyage(request,voyage_id):
 		if form.is_valid():
 			cursor.execute(''' UPDATE Voyage SET departure_time=%s, arrival_time=%s WHERE id=%s''',
 				[form.cleaned_data['departure_time'],form.cleaned_data['arrival_time'],voyage_id])
-			pass
-
 	return render(request,'terminal_agent/editVoyage.html',{'form':form,'plate':row[0],'voyage_id':voyage_id})

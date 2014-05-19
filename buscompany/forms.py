@@ -2,8 +2,8 @@ from django import forms
 from buscompany.models import Bus
 
 class VoyageLookupForm(forms.Form):
-	departure_city = forms.CharField(max_length=100)
-	arrival_city = forms.CharField(max_length=100)
+	departure_city = forms.ChoiceField()
+	arrival_city = forms.ChoiceField()
 	date = forms.DateField()
 
 class BuyTicketForm(forms.Form):
