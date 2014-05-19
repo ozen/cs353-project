@@ -1,0 +1,22 @@
+{% extends "common/base.html" %}
+
+{% block title %}Buy Ticket{% endblock %}
+
+{% block content %}
+<table class="table">
+	<thead>
+		<th>From</th>
+		<th>To</th>
+		<th>When</th>
+		<th>Seat</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{fr}}</td>
+			<td>{{to}}</td>
+			<td>{{dtime}}</td>
+			<td>{{seat}}</td>
+		</tr>
+	</tbody>
+</table>
+{% endblock %}

@@ -5,8 +5,6 @@
 {% block content %}
 <form class="form" action="/buyTicket/{{voyage_id}}/" method="post">{%csrf_token%}
 	{{ buyForm.as_p }}
-	{{ occupied_seats }}
-	{{ passenger_capacity }}
 	<input class="btn btn-default" type="submit" value="Buy" />
 </form>
 

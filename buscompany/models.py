@@ -196,7 +196,7 @@ class Voyage(models.Model):
 class Reservation(models.Model):
 	tck_no = models.ForeignKey(Customer,db_column='tck_no',db_index=False)
 	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id',db_index=True)
-	seat = models.CharField(max_length=3)
+	seat = models.IntegerField()
 	time = models.TimeField()
 	price = models.DecimalField(max_digits=5,decimal_places=2)
 	class Meta:
@@ -220,7 +220,7 @@ class AssociatedAssistant(models.Model):
 class Ticket(models.Model):
 	tck_no = models.ForeignKey(Customer,db_column='tck_no',db_index=False)
 	voyage_id = models.ForeignKey(Voyage,db_column='voyage_id',db_index=True)
-	seat = models.CharField(max_length=3)
+	seat = models.IntegerField()
 	payment_type = models.CharField(max_length=5)
 	payment_time = models.DateTimeField()
 	price = models.DecimalField(max_digits=5,decimal_places=2)
