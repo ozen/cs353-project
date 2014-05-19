@@ -22,3 +22,8 @@ class BusForm(forms.ModelForm):
 class TerminalAgentVoyageForm(forms.Form):
 	departure_time = forms.DateTimeField(label='Departure Time')
 	arrival_time = forms.DateTimeField(label='Arrival Time')
+
+class SearchTicketForm(forms.Form):
+	tck_no = forms.CharField(max_length=11,required=False)
+	name = forms.CharField(max_length=35,required=False)
+	surname = forms.CharField(max_length=15,required=False)
