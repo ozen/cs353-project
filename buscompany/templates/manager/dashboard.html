@@ -17,14 +17,14 @@
             <tbody>
                 {% for voyage in voyages %}
                 <tr>
-                    <td><p>{{ voyage.route_id.depart_terminal.name }}</p><p>{{ voyage.departure_time }}</p></td>
-                    <td><p>{{ voyage.route_id.arrive_terminal.name }}</p><p>{{ voyage.arrival_time }}</p></td>
+                    <td><p>{{ voyage.route_id.depart_terminal.city }} {{ voyage.route_id.depart_terminal.address }}</p><p>{{ voyage.departure_time }}</p></td>
+                    <td><p>{{ voyage.route_id.arrival_terminal.city }} {{ voyage.route_id.arrival_terminal.address }}</p><p>{{ voyage.arrival_time }}</p></td>
                     <td><p>{{ voyage.plate.bustype_id.brand }}</p><p>{{ voyage.plate.bustype_id.model }}</p></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pull-right"><a href="">See More</a></div>
+        <div class="pull-right"><a href="/manager/listVoyage">See More</a></div>
     </div>
     <div class="col-xs-6">
         <h3>Buses</h3>
@@ -46,7 +46,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pull-right"><a href="">See More</a></div>
+        <div class="pull-right"><a href="/manager/listBus">See More</a></div>
     </div>
     <div class="col-xs-6">
         <h3>Garages</h3>
@@ -68,7 +68,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pull-right"><a href="">See More</a></div>
+        <div class="pull-right"><a href="/manager/listGarage">See More</a></div>
     </div>
     <div class="col-xs-6">
         <h3>Rental</h3>
@@ -92,7 +92,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pull-right"><a href="">See More</a></div>
+        <div class="pull-right"><a href="/manager/listRental">See More</a></div>
     </div>
 </div>
 {% endblock %}

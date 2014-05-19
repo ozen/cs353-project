@@ -1,0 +1,33 @@
+{% extends "manager/manager.html" %}
+
+{% block title %}Manager Dashboard{% endblock %}
+
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Duration</th>
+            <th>Distance</th>
+            <th>Breaks</th>
+            <th>Edit/Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for route in routes %}
+        <tr>
+            <td>{{ route.depart_terminal.city }} {{ route.depart_terminal.address }}</td>
+            <td>{{ route.arrive_terminal.city }} {{ route.arrive_terminal.address }}</td>
+            <td>{{ route.estimated_duration }}</td>
+            <td>{{ route.distance }}</td>
+            <td>{{ route.number_of_breaks }}</td>
+            <td>
+                <a class="btn btn-default" href="/manager/editBus/{{ route.route_id }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteBus/{{ route.route_id }}/">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
