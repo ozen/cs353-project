@@ -7,12 +7,12 @@ class VoyageLookupForm(forms.Form):
 	date = forms.DateField()
 
 class BuyTicketForm(forms.Form):
-tck_no = forms.CharField(max_length=11)
-name = forms.CharField(max_length=35)
-surname = forms.CharField(max_length=15)
-date_of_birth = forms.DateField()
-seat = forms.ChoiceField()
-gender = forms.ChoiceField(choices = [('m','Man'),('w','Woman')],widget=forms.RadioSelect())
+    tck_no = forms.CharField(max_length=11)
+    name = forms.CharField(max_length=35)
+    surname = forms.CharField(max_length=15)
+    date_of_birth = forms.DateField()
+    seat = forms.ChoiceField()
+    gender = forms.ChoiceField(choices = [('m','Man'),('w','Woman')],widget=forms.RadioSelect())
 
 class BusForm(forms.ModelForm):
 	class Meta:
