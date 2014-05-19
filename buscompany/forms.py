@@ -18,3 +18,7 @@ class BusForm(forms.ModelForm):
 	class Meta:
 		model = Bus
 		#fields = ['plate']
+
+class TerminalAgentVoyageForm(forms.Form):
+	departure_time = forms.DateTimeField(label='Departure Time')
+	arrival_time = forms.DateTimeField(label='Arrival Time')

@@ -1,0 +1,13 @@
+{% extends "terminal_agent/terminal_agent.html" %}
+
+{% block title %}Edit Voyage{% endblock %}
+
+{% block content %}
+<form class="form" action="/terminal_agent/editVoyage/{{voyage_id}}/" method="post">{%csrf_token%}
+	{{plate}}		
+			{{ form.as_p }}
+			<input class="btn btn-default" type="submit" value="Update" />
+
+</form>
+
+{% endblock %}
