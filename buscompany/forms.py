@@ -1,4 +1,5 @@
 from django import forms
+from buscompany.models import Bus
 
 class VoyageLookupForm(forms.Form):
 	departure_city = forms.CharField(max_length=100)
@@ -16,3 +17,8 @@ class BuyTicketForm(forms.Form):
 	def __init__(self,ch):
 		super(BuyTicketForm, self).__init__()
 		self.fields['seat'].choices = [(2,3)]
+
+class BusForm(forms.ModelForm):
+	class Meta:
+		model = Bus
+		#fields = ['plate']
