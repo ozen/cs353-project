@@ -226,4 +226,4 @@ class Ticket(models.Model):
 	price = models.DecimalField(max_digits=5,decimal_places=2)
 	class Meta:
 		db_table = 'Ticket'
-		unique_together = (('tck_no','voyage_id','seat'),)
+		unique_together = (('tck_no','voyage_id','seat'),('voyage_id','seat'),)
