@@ -3,5 +3,8 @@
 {% block title %}Manager Dashboard{% endblock %}
 
 {% block content %}
-{{ form.as_p }}
+<form class="form" action="/manager/add{{ type }}" method="post">{%csrf_token%}
+    {{ form.as_p }}
+    <input class="btn btn-default" type="submit" value="Add" />
+</form>
 {% endblock %}

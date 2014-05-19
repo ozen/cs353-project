@@ -1,0 +1,33 @@
+{% extends "manager/manager.html" %}
+
+{% block title %}Manager Dashboard{% endblock %}
+
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Plate</th>
+            <th>Brand/Model</th>
+            <th>Roaming Distance</th>
+            <th>Start Date</th>
+            <th>Is Operational</th>
+            <th>Edit/Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bus in buses %}
+        <tr>
+            <td>{{ bus.plate }}</td>
+            <td>{{ bus.bustype_id.brand }} {{ bus.bustype_id.model }}</td>
+            <td>{{ bus.roaming_distance }}</td>
+            <td>{{ bus.start_date }}</td>
+            <td>{{ bus.is_operational }}</td>
+            <td>
+                <a class="btn btn-default" href="/manager/editBus/{{ bus.plate }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteBus/{{ bus.plate }}/">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

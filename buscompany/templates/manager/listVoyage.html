@@ -1,0 +1,33 @@
+{% extends "manager/manager.html" %}
+
+{% block title %}Manager Dashboard{% endblock %}
+
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Bus</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Price</th>
+            <th>Occupied Seats</th>
+            <th>Edit/Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for voyage in voyages %}
+        <tr>
+            <td>{{ voyage.plate.bustype_id.brand }} {{ voyage.plate.bustype_id.model }}</td>
+            <td><p>{{ voyage.route_id.depart_terminal.city }} {{ voyage.route_id.depart_terminal.address }}</p><p>{{ voyage.departure_time }}</p></td>
+            <td><p>{{ voyage.route_id.arrive_terminal.city }} {{ voyage.route_id.arrive_terminal.address }}</p><p>{{ voyage.arrival_time }}</p></td>
+            <td>{{ voyage.price }}</td>
+            <td>{{ voyage.occupied_seats }}</td>
+            <td>
+                <a class="btn btn-default" href="/manager/editBus/{{ voyage.voyage_id }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteBus/{{ voyage.voyage_id }}/">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
