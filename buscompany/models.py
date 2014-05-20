@@ -10,11 +10,13 @@ class Staff(models.Model):
 	start_date = models.CharField(max_length=10)
 	class Meta:
 		db_table = 'Staff'
+	def __unicode__(self):
+		return u'%s' % (self.tck_no)
 
 class Manager(models.Model):
 	tck_no = models.ForeignKey(Staff,primary_key=True,db_column='tck_no')
 	position = models.CharField(max_length=40)
-	user = models.OneToOneField(User)
+	#user = models.OneToOneField(User)
 	class Meta:
 		db_table = 'Manager'
 
@@ -25,12 +27,14 @@ class SalesOffice(models.Model):
 	class Meta:
 		db_table = 'SalesOffice'
 		unique_together = (('city','address'),)
+	def __unicode__(self):
+		return u'%s %s' % (self.city, self.address)
 
 class Salesperson(models.Model):
 	tck_no = models.ForeignKey(Staff,primary_key=True,db_column='tck_no')
 	office_id = models.ForeignKey(SalesOffice,db_column='office_id',db_index=True)
 	tickets_sold = models.PositiveIntegerField()
-	user = models.OneToOneField(User)
+	#user = models.OneToOneField(User)
 	class Meta:
 		db_table = 'Salesperson'
 
@@ -48,7 +52,7 @@ class Terminal(models.Model):
 class TerminalAgent(models.Model):
 	tck_no = models.ForeignKey(Staff,primary_key=True,db_column='tck_no')
 	terminal_id = models.ForeignKey(Terminal,db_column='terminal_id',db_index=False)
-	user = models.OneToOneField(User)
+	#user = models.OneToOneField(User)
 	class Meta:
 		db_table = 'TerminalAgent'
 

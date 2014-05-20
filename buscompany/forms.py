@@ -42,6 +42,25 @@ class VoyageForm(forms.ModelForm):
             'route_id': _('Route'),
         }
 
+class TerminalForm(forms.ModelForm):
+    class Meta:
+        model = Terminal
+
+class SalesOfficeForm(forms.ModelForm):
+    class Meta:
+        model = SalesOffice
+
+class SalespersonForm(forms.ModelForm):
+    office_id = forms.ModelChoiceField(queryset=SalesOffice.objects.all(), label='Office')
+    tickets_sold = forms.IntegerField(label='Tickets Sold')
+    class Meta:
+        model = Staff
+
+class TerminalAgentForm(forms.ModelForm):
+    terminal_id = forms.ModelChoiceField(queryset=Terminal.objects.all(), label='Terminal')
+    class Meta:
+        model = Staff
+
 class TerminalAgentVoyageForm(forms.Form):
 	departure_time = forms.DateTimeField(label='Departure Time')
 	arrival_time = forms.DateTimeField(label='Arrival Time')

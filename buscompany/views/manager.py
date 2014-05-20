@@ -109,6 +109,91 @@ def addVoyage(request, pk):
 
     return render(request, 'manager/add.html', {'form': form, 'type': 'Voyage'})
 
+def addTerminal(request, pk):
+    terminal = None
+    if pk:
+        try:
+            terminal = Terminal.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            return render(request, 'common/notification.html', {'message': 'Terminal could not found: '+ pk, 'redirect': '/manager/listTerminal'})
+
+    if request.method == 'POST':
+        form = TerminalForm(request.POST, instance=terminal) if terminal else TerminalForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'common/notification.html', {'message': 'Terminal saved.', 'redirect': '/manager/listTerminal'})
+    else:
+        form = TerminalForm(instance=terminal) if terminal else TerminalForm()
+
+    return render(request, 'manager/add.html', {'form': form, 'type': 'Terminal'})
+
+def addSalesOffice(request, pk):
+    salesOffice = None
+    if pk:
+        try:
+            salesOffice = SalesOffice.objects.get(pk=pk)
+        except ObjectDoesNotExist:
+            return render(request, 'common/notification.html', {'message': 'SalesOffice could not found: '+ pk, 'redirect': '/manager/listSalesOffice'})
+
+    if request.method == 'POST':
+        form = SalesOfficeForm(request.POST, instance=salesOffice) if salesOffice else SalesOfficeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'common/notification.html', {'message': 'SalesOffice saved.', 'redirect': '/manager/listSalesOffice'})
+    else:
+        form = SalesOfficeForm(instance=salesOffice) if salesOffice else SalesOfficeForm()
+
+    return render(request, 'manager/add.html', {'form': form, 'type': 'SalesOffice'})
+
+def addSalesperson(request, pk):
+    salesperson = None
+    staff = None
+    if pk:
+        try:
+            salesperson = Salesperson.objects.get(pk=pk)
+            staff = Staff.objects.get(tck_no=salesperson.tck_no)
+        except ObjectDoesNotExist:
+            return render(request, 'common/notification.html', {'message': 'Salesperson could not found: '+ pk, 'redirect': '/manager/listSalesperson'})
+
+    if request.method == 'POST':
+        form = SalespersonForm(request.POST, instance=staff) if staff else SalespersonForm(request.POST)
+        if form.is_valid():
+            newStaff = form.save()
+            newSalesperson = Salesperson(tck_no=newStaff, office_id=form.cleaned_data['office_id'], tickets_sold=form.cleaned_data['tickets_sold'])
+            newSalesperson.save()
+            return render(request, 'common/notification.html', {'message': 'Salesperson saved.' , 'redirect': '/manager/listSalesperson'})
+    else:
+        form = SalespersonForm(instance=staff) if staff else SalespersonForm()
+        if salesperson:
+            form.fields['office_id'].initial = salesperson.office_id
+            form.fields['tickets_sold'].initial = salesperson.tickets_sold
+
+    return render(request, 'manager/add.html', {'form': form, 'type': 'Salesperson'})
+
+def addTerminalAgent(request, pk):
+    terminalAgent = None
+    staff = None
+    if pk:
+        try:
+            terminalAgent = TerminalAgent.objects.get(pk=pk)
+            staff = Staff.objects.get(tck_no=terminalAgent.tck_no)
+        except ObjectDoesNotExist:
+            return render(request, 'common/notification.html', {'message': 'TerminalAgent could not found: '+ pk, 'redirect': '/manager/listTerminalAgent'})
+
+    if request.method == 'POST':
+        form = TerminalAgentForm(request.POST, instance=staff) if staff else TerminalAgentForm(request.POST)
+        if form.is_valid():
+            newStaff = form.save()
+            newTerminalAgent = TerminalAgent(tck_no=newStaff, terminal_id=form.cleaned_data['terminal_id'])
+            newTerminalAgent.save()
+            return render(request, 'common/notification.html', {'message': 'TerminalAgent saved.', 'redirect': '/manager/listTerminalAgent'})
+    else:
+        form = TerminalAgentForm(instance=staff) if terminalAgent else TerminalAgentForm()
+        if terminalAgent:
+            form.fields['terminal_id'].initial = terminalAgent.terminal_id
+
+    return render(request, 'manager/add.html', {'form': form, 'type': 'TerminalAgent'})
+
 def listBus(request):
     buses = Bus.objects.all()
     return render(request, 'manager/listBus.html', {'buses': buses})
@@ -131,6 +216,22 @@ def listRoute(request):
 def listVoyage(request):
     voyages = Voyage.objects.all()
     return render(request, 'manager/listVoyage.html', {'voyages': voyages})
+
+def listTerminal(request):
+    terminals = Terminal.objects.all()
+    return render(request, 'manager/listTerminal.html', {'terminals': terminals})
+
+def listSalesOffice(request):
+    salesOffices = SalesOffice.objects.all()
+    return render(request, 'manager/listSalesOffice.html', {'salesOffices': salesOffices})
+
+def listSalesperson(request):
+    salespeople = Salesperson.objects.all()
+    return render(request, 'manager/listSalesperson.html', {'salespeople': salespeople})
+
+def listTerminalAgent(request):
+    terminalAgents = TerminalAgent.objects.all()
+    return render(request, 'manager/listTerminalAgent.html', {'terminalAgents': terminalAgents})
 
 def deleteBus(request, plate):
     try:
@@ -171,6 +272,38 @@ def deleteVoyage(request, pk):
     except ObjectDoesNotExist:
         return render(request, 'common/notification.html', {'message': 'Voyage could not found: '+ pk, 'redirect': '/manager/listVoyage'})
     return render(request, 'common/notification.html', {'message': 'Voyage deleted.', 'redirect': '/manager/listVoyage'})
+
+def deleteTerminal(request, pk):
+    try:
+        terminal = Terminal.objects.get(pk=pk)
+        terminal.delete()
+    except ObjectDoesNotExist:
+        return render(request, 'common/notification.html', {'message': 'Terminal could not found: '+ pk, 'redirect': '/manager/listTerminal'})
+    return render(request, 'common/notification.html', {'message': 'Terminal deleted.', 'redirect': '/manager/listTerminal'})
+
+def deleteSalesOffice(request, pk):
+    try:
+        salesOffice = SalesOffice.objects.get(pk=pk)
+        salesOffice.delete()
+    except ObjectDoesNotExist:
+        return render(request, 'common/notification.html', {'message': 'SalesOffice could not found: '+ pk, 'redirect': '/manager/listSalesOffice'})
+    return render(request, 'common/notification.html', {'message': 'SalesOffice deleted.', 'redirect': '/manager/listSalesOffice'})
+
+def deleteSalesperson(request, pk):
+    try:
+        salesperson = Staff.objects.get(pk=pk)
+        salesperson.delete()
+    except ObjectDoesNotExist:
+        return render(request, 'common/notification.html', {'message': 'Salesperson could not found: '+ pk, 'redirect': '/manager/listSalesperson'})
+    return render(request, 'common/notification.html', {'message': 'Salesperson deleted.', 'redirect': '/manager/listSalesperson'})
+
+def deleteTerminalAgent(request, pk):
+    try:
+        terminalAgent = Staff.objects.get(pk=pk)
+        terminalAgent.delete()
+    except ObjectDoesNotExist:
+        return render(request, 'common/notification.html', {'message': 'TerminalAgent could not found: '+ pk, 'redirect': '/manager/listTerminalAgent'})
+    return render(request, 'common/notification.html', {'message': 'TerminalAgent deleted.', 'redirect': '/manager/listTerminalAgent'})
 
 def getReportSql(report_id):
     sql = ['''SELECT tck_no,customer.name,customer.surname,sum(price) AS total_spending FROM customer

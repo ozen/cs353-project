@@ -1,0 +1,31 @@
+{% extends "manager/manager.html" %}
+
+{% block title %}Manager Dashboard{% endblock %}
+
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>City</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Capacity</th>
+            <th>Edit/Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for terminal in terminals %}
+        <tr>
+            <td>{{ terminal.city }}</td>
+            <td>{{ terminal.address }}</td>
+            <td>{{ terminal.phone }}</td>
+            <td>{{ terminal.capacity }}</td>
+            <td>
+                <a class="btn btn-default" href="/manager/addTerminal/{{ terminal.pk }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteTerminal/{{ terminal.pk }}/">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

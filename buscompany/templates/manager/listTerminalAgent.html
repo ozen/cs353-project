@@ -1,0 +1,31 @@
+{% extends "manager/manager.html" %}
+
+{% block title %}Manager Dashboard{% endblock %}
+
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>TCK No</th>
+            <th>Name</th>
+            <th>Terminal</th>
+            <th>Salary</th>
+            <th>Edit/Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for terminalAgent in terminalAgents %}
+        <tr>
+            <td>{{ terminalAgent.tck_no.tck_no }}</td>
+            <td>{{ terminalAgent.tck_no.name }}</td>
+            <td>{{ terminalAgent.terminal_id.city }} {{ terminalAgent.terminal_id.address }}</td>
+            <td>{{ terminalAgent.tck_no.salary }}</td>
+            <td>
+                <a class="btn btn-default" href="/manager/addTerminalAgent/{{ terminalAgent.pk }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteTerminalAgent/{{ terminalAgent.pk }}/">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

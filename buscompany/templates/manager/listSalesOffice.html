@@ -1,0 +1,29 @@
+{% extends "manager/manager.html" %}
+
+{% block title %}Manager Dashboard{% endblock %}
+
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>City</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Edit/Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for salesOffice in salesOffices %}
+        <tr>
+            <td>{{ salesOffice.city }}</td>
+            <td>{{ salesOffice.address }}</td>
+            <td>{{ salesOffice.phone }}</td>
+            <td>
+                <a class="btn btn-default" href="/manager/addSalesOffice/{{ salesOffice.pk }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteSalesOffice/{{ salesOffice.pk }}/">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
