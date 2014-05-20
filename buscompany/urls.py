@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^manager/deleteSalesOffice/(?P<pk>\d+)/$', views.manager.deleteSalesOffice),
     url(r'^manager/deleteSalesperson/(?P<pk>\d+)/$', views.manager.deleteSalesperson),
     url(r'^manager/deleteTerminalAgent/(?P<pk>\d+)/$', views.manager.deleteTerminalAgent),
+    url(r'^manager/report/([0-9])/$', views.manager.report),
     url(r'^salesperson/$', views.salesperson.dashboard),
     url(r'^salesperson/tickets/$', views.salesperson.tickets),
     url(r'^salesperson/cancelTicket/([0-9]+)/$', views.salesperson.cancelTicket),

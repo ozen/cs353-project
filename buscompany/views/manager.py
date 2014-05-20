@@ -2,6 +2,7 @@ from django.shortcuts import render
 from buscompany.models import *
 from buscompany.forms import *
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import connection
 
 def dashboard(request):
     voyages = Voyage.objects.order_by('departure_time')[:5]
@@ -304,3 +305,17 @@ def deleteTerminalAgent(request, pk):
         return render(request, 'common/notification.html', {'message': 'TerminalAgent could not found: '+ pk, 'redirect': '/manager/listTerminalAgent'})
     return render(request, 'common/notification.html', {'message': 'TerminalAgent deleted.', 'redirect': '/manager/listTerminalAgent'})
 
+def getReportSql(report_id):
+    sql = ['''SELECT tck_no,customer.name,customer.surname,sum(price) AS total_spending FROM customer
+        NATURAL JOIN ticket GROUP BY tck_no ORDER BY total_spending DESC LIMIT 100''',
+        '''SELECT t1.city,t1.address,t2.city,t2.address,avg(V.occupied_seats )/ B.passenger_capacity FROM Voyage AS V NATURAL LEFT OUTER JOIN Bus
+        NATURAL LEFT OUTER JOIN BusType AS B,Route,Terminal t1,Terminal t2
+        WHERE t1.id=Route.depart_terminal AND t2.id=Route.arrive_terminal AND Route.route_id=v.route_id GROUP BY V.route_id''']
+    return sql[int(report_id)-1]
+
+def report(request,report_id):
+    cursor = connection.cursor()
+    cursor.execute(getReportSql(report_id))
+    rows = cursor.fetchall()
+
+    return render(request,'manager/report'+report_id+'.html',{'rows':rows})
