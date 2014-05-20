@@ -86,7 +86,7 @@ class Bus(models.Model):
 	bustype_id = models.ForeignKey(BusType,db_column='bustype_id',db_index=False)
 	roaming_distance = models.IntegerField(default=0)
 	start_date = models.DateField()
-	is_operational = models.CharField(max_length=1,db_index=True)
+	is_operational = models.CharField(max_length=1,choices=(('y','Operational'),('n','Not Operational')),default='y',db_index=True)
 	class Meta:
 		db_table = 'Bus'
 		unique_together = (('plate','bustype_id'),)
