@@ -1,0 +1,33 @@
+{% extends "manager/manager.html" %}
+
+{% block title %}Manager Dashboard{% endblock %}
+
+{% block content %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>TCK No</th>
+            <th>Name</th>
+            <th>Office</th>
+            <th>Tickets Sold</th>
+            <th>Salary</th>
+            <th>Edit/Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for salesperson in salespeople %}
+        <tr>
+            <td>{{ salesperson.tck_no.tck_no }}</td>
+            <td>{{ salesperson.tck_no.name }}</td>
+            <td>{{ salesperson.office_id.city }} {{ salesperson.office_id.address }}</td>
+            <td>{{ salesperson.tickets_sold }}</td>
+            <td>{{ terminalAgent.tck_no.salary }}</td>
+            <td>
+                <a class="btn btn-default" href="/manager/addSalesperson/{{ salesperson.pk }}/">Edit</a>
+                <a class="btn btn-default" href="/manager/deleteSalesperson/{{ salesperson.pk }}/">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
