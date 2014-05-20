@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^manager/deleteGarage/(?P<pk>\d+)/$', views.manager.deleteGarage),
     url(r'^manager/deleteRoute/(?P<pk>\d+)/$', views.manager.deleteRoute),
     url(r'^manager/deleteVoyage/(?P<pk>\d+)/$', views.manager.deleteVoyage),
+    url(r'^manager/report/([0-9])/$', views.manager.report),
     url(r'^salesperson/$', views.salesperson.dashboard),
     url(r'^salesperson/tickets/$', views.salesperson.tickets),
     url(r'^salesperson/cancelTicket/([0-9]+)/$', views.salesperson.cancelTicket),
