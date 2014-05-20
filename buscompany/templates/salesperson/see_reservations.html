@@ -1,0 +1,37 @@
+{% extends "salesperson/salesperson.html" %}
+
+{% block title %}Salesperson Dashboard{% endblock %}
+
+{% block content %}
+<form class="form" action="/salesperson/reservations/" method="post">{%csrf_token%}
+
+{{ form.as_p}}
+<input class="btn btn-default" type="submit" value="Search" />
+</form>
+<table class="table table-striped table-hover">
+	<thead>
+		<tr>
+			<th>Name</td>
+			<th>Surname</td>
+			<th>Payment Time</td>
+			<th>Operation</td>
+		</tr>
+	</thead>
+	<tbody>
+		{% for row in rows %}
+		<tr>
+			<td>{{ row.0 }}
+			</td>
+			<td>{{ row.1 }}
+			</td>
+			<td>{{ row.3 }}
+			</td>
+			<td>
+				<a class="btn btn-default btn-block" href="/reservationDetails/{{ row.2 }}/">Details</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+
+</table>
+{% endblock %}

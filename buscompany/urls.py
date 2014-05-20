@@ -29,5 +29,7 @@ urlpatterns = [
     url(r'^buyTicket/([0-9]+)/$', views.main.buyTicket),
     url(r'^makeReservation/([0-9]+)/$', views.main.makeReservation),
     url(r'^ticketDetails/([0-9]+)/$', views.salesperson.ticketDetails),
+    url(r'^reservationDetails/([0-9]+)/$', views.salesperson.reservationDetails),
+    url(r'^salesperson/cancelReservation/([0-9]+)/$', views.salesperson.cancelReservation),
 ]
 

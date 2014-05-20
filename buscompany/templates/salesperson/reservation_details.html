@@ -1,0 +1,26 @@
+{% extends "salesperson/salesperson.html" %}
+
+{% block title %}Reservation Details{% endblock %}
+
+{% block content %}
+<h2>Ticket Details</h2>
+<table class="table">
+	<thead>
+		<th>From</th>
+		<th>To</th>
+		<th>When</th>
+		<th>Operation</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{rows.2}}</td>
+			<td>{{rows.3}}</td>
+			<td>{{rows.1}}</td>
+
+			<td>
+			<a class="btn btn-default btn-block" href="/salesperson/cancelReservation/{{ rows.0 }}/">Cancel</a></td>
+		</tr>
+	</tbody>
+</table>
+
+{% endblock %}
