@@ -33,7 +33,7 @@ def createListVoyages(request):
 			if route_id is not None:
 
 
-				cursor.execute('''SELECT v.departure_time,v.arrival_time,bt.model,v.occupied_seats,v.id,b.plate FROM Voyage v,Bus b,BusType bt
+				cursor.execute('''SELECT v.departure_time,v.arrival_time,bt.model,v.occupied_seats,v.id,b.plate,bt.passenger_capacity FROM Voyage v,Bus b,BusType bt
 								 WHERE v.route_id=%s AND b.plate = v.plate AND bt.id=b.bustype_id
 								 AND v.departure_time >= %s AND v.departure_time< %s''',
 								 [route_id[0],form.cleaned_data['date'],form.cleaned_data['date']+datetime.timedelta(days=1)])
