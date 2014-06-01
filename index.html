@@ -4,8 +4,10 @@ title: Bus Company Data Management System
 ---
 
 <div id="home">
-    <h3>Posts</h3>
     <ul class="posts">
+        <li>
+            <span>22 May 2014</span>&raquo; <a href="https://github.com/ozen/cs353-project/">GitHub Repository</a>
+        </li>
         {% for post in site.posts %}
         <li>
             <span>{{ post.date | date_to_string }}</span>&raquo; <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
